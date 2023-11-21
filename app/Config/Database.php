@@ -29,7 +29,7 @@ class Database extends Config
         'hostname'     => '127.0.0.1',
         'username'     => 'roberto',
         'password'     => 'robertito',
-        'database'     => 'PosadaExpres',
+        'database'     => 'sw3',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
@@ -41,7 +41,7 @@ class Database extends Config
         'compress'     => false,
         'strictOn'     => false,
         'failover'     => [],
-        'port'         => 3306,
+        'port'         => 3307,
         'numberNative' => false,
     ];
 
