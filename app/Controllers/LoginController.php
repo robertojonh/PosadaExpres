@@ -7,9 +7,13 @@ use App\Models\usuariosModelo;
 
 class LoginController extends BaseController
 {
-    public function index(): string
+    public function index()
     {
-        return view('Login/LoginUserView');
+        if (session()->has('id_user')) {
+            return redirect()->to('/');
+        } else {
+            return view('/Login/LoginUserView');
+        }
     }
 
     public function Login()
