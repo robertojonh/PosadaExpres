@@ -7,6 +7,14 @@ use App\Models\usuariosModelo;
 
 class LoginController extends BaseController
 {
+    private $loginFails;
+    private $userModel;
+
+    public function __construct()
+    {
+        $this->loginFails = model('LoginFailsModel');
+        $this->userModel = model('UsuariosModel');
+    }
     public function index()
     {
         if (session()->has('id_user')) {
@@ -23,11 +31,11 @@ class LoginController extends BaseController
         //$validation = service('validation');
         $validation->setRules([
             'username' => [
-                'label'  => 'Nombre de Usuario',
+                'label' => 'Nombre de Usuario',
                 /* 'rules'  => 'required|regex_match[/^[A-Z][a-zÀ-ÿ]{2,25}$/]|min_length[8]|max_length[20]', */
-                'rules'  => 'required|min_length[1]|max_length[20]',
+                'rules' => 'required|min_length[1]|max_length[20]',
                 'errors' => [
-                    'required'   => 'El campo {field} es obligatorio',
+                    'required' => 'El campo {field} es obligatorio',
                     /* 'regex_match' => 'Debe empezar con mayuscula', */
                     'min_length' => 'El campo {field} debe tener al menos 8 caracteres',
                     'max_length' => 'El campo {field} debe tener hasta 20 caractéres',
@@ -35,10 +43,10 @@ class LoginController extends BaseController
                 ]
             ],
             'password' => [
-                'label'  => 'Contraseña',
-                'rules'  => 'required|min_length[1]|max_length[30]',
+                'label' => 'Contraseña',
+                'rules' => 'required|min_length[1]|max_length[30]',
                 'errors' => [
-                    'required'   => 'El campo {field} es obligatorio',
+                    'required' => 'El campo {field} es obligatorio',
                     'min_length' => 'El campo {field} debe tener al menos 8 caracteres',
                     'max_length' => 'El campo {field} debe tener hasta 30 caractéres',
 
@@ -51,33 +59,21 @@ class LoginController extends BaseController
         } else {
 
             $ipusuario = $_SERVER['REMOTE_ADDR'];
-            $failscount = new loginfailsModelo();
-            $intentos = $failscount->intentosfallidos($ipusuario);
+            $intentos = $this->loginFails->intentosfallidos($ipusuario);
             $contado = $intentos[0]['count(ip_address)'];
             $contado2 = intval($contado);
             if ($contado2 < 5) {
 
-                $Usuario = new usuariosModelo();
                 $username = $this->request->getPost('username');
-                $datosUsuarios = $Usuario->datosdenull(['user' => $username]);
+                $datosUsuarios = $this->userModel->datosdenull(['user' => $username]);
                 if (count($datosUsuarios) > 0) {
 
-                    $Usuario = new usuariosModelo();
                     $username = $this->request->getPost('username');
                     $password = $this->request->getPost('password');
-                    $datosUsuarios = $Usuario->datosdenull(['user' => $username]);
+                    $datosUsuarios = $this->userModel->datosdenull(['user' => $username]);
                     if (count($datosUsuarios) > 0 && password_verify($password, $datosUsuarios[0]['password'])) {
 
                         $username = $this->request->getPost('username');
-                        $datosUsuariosInvernadero = $Usuario->infoinvernaderousuario($username);
-                        $datosUsuariosCultivos = $Usuario->infocultivousuario($username);
-                        //Validación en caso de que el invernadero no contiene algún cultivo en producción - variable $datosUsuariosCultivos
-                        if ($datosUsuariosCultivos) {
-                            $nombredelcultivoenproduccion = $datosUsuariosCultivos[0]['nombre'];
-                        } else {
-                            $nombredelcultivoenproduccion = "Ningún cultivo en producción";
-                        }
-                        //Termina validación
                         $data = [
                             "id_user" => $datosUsuarios[0]['id_user'],
                             "username" => $datosUsuarios[0]['user'],
@@ -86,16 +82,15 @@ class LoginController extends BaseController
                         ];
                         $session = session();
                         $session->set($data);
-                        return redirect()->to('/');
+                        return redirect()->to(base_url(''));
                     } else {
                         $ipusuario = $_SERVER['REMOTE_ADDR'];
                         $datafails = [
                             "user_id" => $datosUsuarios[0]['id_user'],
                             "ip_address" => $ipusuario,
                         ];
-                        $fails = new loginfailsModelo();
-                        $fails->insert($datafails);
-                        return redirect()->to('/Login')->with('msg', 'La contraseña es Incorrecta');
+                        $this->loginFails->insert($datafails);
+                        return redirect()->to(base_url('Login'))->with('msg', 'La contraseña es Incorrecta');
                     }
                 } else {
                     $ipusuario = $_SERVER['REMOTE_ADDR'];
@@ -103,12 +98,11 @@ class LoginController extends BaseController
                         "user_id" => "UsuarioIncorrecto",
                         "ip_address" => $ipusuario,
                     ];
-                    $fails = new loginfailsModelo();
-                    $fails->insert($datafails);
-                    return redirect()->to('/Login')->with('msg', 'El usuario que has ingresado no existe');
+                    $this->loginFails->insert($datafails);
+                    return redirect()->to(base_url('Login'))->with('msg', 'El usuario que has ingresado no existe');
                 }
             } else {
-                return redirect()->to('/Login')->with('msg', 'Se te ha bloqueado el acceso ' . $ipusuario . ' , espera 1 Hora para poder volver a Ingresar.');
+                return redirect()->to(base_url('Login'))->with('msg', 'Se te ha bloqueado el acceso ' . $ipusuario . ' , espera 1 Hora para poder volver a Ingresar.');
             }
         }
     }
@@ -117,6 +111,6 @@ class LoginController extends BaseController
     {
         $session = session();
         $session->destroy();
-        return redirect()->to('/Login');
+        return redirect()->to(base_url('Login'));
     }
 }
