@@ -5,14 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Principal - Posada Express</title>
+    <link href="<?= base_url() ?>/public/font-awesome/css/all.min.css" rel="stylesheet">
     <link href="<?= base_url() ?>/public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
 </head>
 
 <body>
     <!-- Inicio del NavBar -->
-    <nav class="navbar navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-dark bg-dark fixed-top mb-5">
         <div class="container-fluid">
-            <a class="navbar-brand" href="<?= base_url("/Inicio"); ?>">Posada Express</a>
+            <a class="navbar-brand" href="<?= base_url("/Inicio"); ?>">PE</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
                 aria-label="Abrir menú de navegación">
@@ -21,17 +24,18 @@
             <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
                 aria-labelledby="offcanvasDarkNavbarLabel">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Posada Express</h5>
+                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">PE</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                         aria-label="Cerrar"></button>
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Menú Principal</a>
+                            <a class="nav-link active" aria-current="page" href="<?= base_url() ?>/home">Menú
+                                Principal</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Habitaciones</a>
+                            <a class="nav-link" href="<?= base_url() ?>/habitaciones">Habitaciones</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"

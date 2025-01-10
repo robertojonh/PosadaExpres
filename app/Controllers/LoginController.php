@@ -23,9 +23,7 @@ class LoginController extends BaseController
 
     public function Login()
     {
-        //VALIDAMOS LOS IMPUTS
         $validation = \Config\Services::validation();
-        //$validation = service('validation');
         $validation->setRules([
             'username' => [
                 'label' => 'Nombre de Usuario',
@@ -51,25 +49,19 @@ class LoginController extends BaseController
             ],
         ]);
         if (!$validation->withRequest($this->request)->run()) {
-            //dd($validation->getErrors());
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         } else {
-
             $ipusuario = $_SERVER['REMOTE_ADDR'];
             $intentos = $this->loginFails->intentosfallidos($ipusuario);
             $contado = $intentos[0]['count(ip_address)'];
             $contado2 = intval($contado);
-
             if ($contado2 < 5) {
-
                 $username = $this->request->getPost('username');
                 $datosUsuarios = $this->userModel->datosdenull($username);
 
                 if ($datosUsuarios !== null) {
-
                     $password = $this->request->getPost('password');
                     if (password_verify($password, $datosUsuarios->password)) {
-                        // Crear los datos de sesión
                         $data = [
                             "user_id" => $datosUsuarios->user_id,
                             "username" => $datosUsuarios->user,
@@ -78,16 +70,13 @@ class LoginController extends BaseController
                         ];
                         $session = session();
                         $session->set($data);
-                        // Redirigir al inicio
-                        return redirect()->to(base_url(''));
+                        return redirect()->to(base_url('/home'));
                     } else {
-                        // Si la contraseña es incorrecta
                         $datafails = [
                             "user_id" => $datosUsuarios->user_id,
                             "ip_address" => $ipusuario,
                         ];
                         $this->loginFails->insertar($datafails);
-
                         return redirect()->to(base_url('Login'))->with('msg', 'La contraseña es Incorrecta');
                     }
                 } else {
@@ -96,11 +85,9 @@ class LoginController extends BaseController
                         "ip_address" => $ipusuario,
                     ];
                     $this->loginFails->insertar($datafails);
-
                     return redirect()->to(base_url('Login'))->with('msg', 'El usuario que has ingresado no existe');
                 }
             } else {
-                // Si se ha superado el límite de intentos fallidos
                 return redirect()->to(base_url('Login'))->with('msg', 'Se te ha bloqueado el acceso ' . $ipusuario . ' , espera 1 Hora para poder volver a Ingresar.');
             }
         }
