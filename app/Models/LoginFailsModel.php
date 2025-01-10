@@ -6,6 +6,7 @@ use CodeIgniter\Model;
 
 class LoginFailsModel extends Model
 {
+    protected $table = 'loginfails';
     public function intentosfallidos($ipusuario)
     {
         $fecha_inicio = date('Y-m-d H:i:s');
@@ -21,6 +22,13 @@ class LoginFailsModel extends Model
         $result = $usuarios->get()->getRow();
         $total = $result->total;
         return $total; */
+    }
+
+    public function insertar($datafails)
+    {
+        // Asegúrate de que $this->db está correctamente inicializado.
+        $builder = $this->db->table($this->table); // Seleccionar la tabla
+        $builder->insert($datafails); // Insertar los datos
     }
 
 }

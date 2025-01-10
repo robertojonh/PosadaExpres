@@ -2,9 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\loginfailsModelo;
-use App\Models\usuariosModelo;
-
 class LoginController extends BaseController
 {
     private $loginFails;
@@ -13,7 +10,7 @@ class LoginController extends BaseController
     public function __construct()
     {
         $this->loginFails = model('LoginFailsModel');
-        $this->userModel = model('UsuariosModel');
+        $this->userModel = model('UsuarioModel');
     }
     public function index()
     {
@@ -62,46 +59,48 @@ class LoginController extends BaseController
             $intentos = $this->loginFails->intentosfallidos($ipusuario);
             $contado = $intentos[0]['count(ip_address)'];
             $contado2 = intval($contado);
+
             if ($contado2 < 5) {
 
                 $username = $this->request->getPost('username');
-                $datosUsuarios = $this->userModel->datosdenull(['user' => $username]);
-                if (count($datosUsuarios) > 0) {
+                $datosUsuarios = $this->userModel->datosdenull($username);
 
-                    $username = $this->request->getPost('username');
+                if ($datosUsuarios !== null) {
+
                     $password = $this->request->getPost('password');
-                    $datosUsuarios = $this->userModel->datosdenull(['user' => $username]);
-                    if (count($datosUsuarios) > 0 && password_verify($password, $datosUsuarios[0]['password'])) {
-
-                        $username = $this->request->getPost('username');
+                    if (password_verify($password, $datosUsuarios->password)) {
+                        // Crear los datos de sesión
                         $data = [
-                            "id_user" => $datosUsuarios[0]['id_user'],
-                            "username" => $datosUsuarios[0]['user'],
-                            "type" => $datosUsuarios[0]['type'],
-                            "email" => $datosUsuarios[0]['email'],
+                            "user_id" => $datosUsuarios->user_id,
+                            "username" => $datosUsuarios->user,
+                            "type" => $datosUsuarios->type,
+                            "email" => $datosUsuarios->email,
                         ];
                         $session = session();
                         $session->set($data);
+                        // Redirigir al inicio
                         return redirect()->to(base_url(''));
                     } else {
-                        $ipusuario = $_SERVER['REMOTE_ADDR'];
+                        // Si la contraseña es incorrecta
                         $datafails = [
-                            "user_id" => $datosUsuarios[0]['id_user'],
+                            "user_id" => $datosUsuarios->user_id,
                             "ip_address" => $ipusuario,
                         ];
-                        $this->loginFails->insert($datafails);
+                        $this->loginFails->insertar($datafails);
+
                         return redirect()->to(base_url('Login'))->with('msg', 'La contraseña es Incorrecta');
                     }
                 } else {
-                    $ipusuario = $_SERVER['REMOTE_ADDR'];
                     $datafails = [
                         "user_id" => "UsuarioIncorrecto",
                         "ip_address" => $ipusuario,
                     ];
-                    $this->loginFails->insert($datafails);
+                    $this->loginFails->insertar($datafails);
+
                     return redirect()->to(base_url('Login'))->with('msg', 'El usuario que has ingresado no existe');
                 }
             } else {
+                // Si se ha superado el límite de intentos fallidos
                 return redirect()->to(base_url('Login'))->with('msg', 'Se te ha bloqueado el acceso ' . $ipusuario . ' , espera 1 Hora para poder volver a Ingresar.');
             }
         }

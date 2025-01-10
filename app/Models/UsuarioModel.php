@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 use CodeIgniter\Model;
-class UsuariosModel extends Model
+class UsuarioModel extends Model
 {
     public function generar_id_usuario()
     {
@@ -86,9 +86,8 @@ class UsuariosModel extends Model
 
     public function datosdenull($data)
     {
-        $usuarios = $this->db->table('usuarios');
-        $usuarios->where($data)->where('deleted_at', null);
-        return $usuarios->get()->getResultArray();
+        $sql = "SELECT * FROM usuarios WHERE user = ?";
+        return $this->db->query($sql, [$data])->getRow();
     }
 
     public function borrarusuariosycinvernaderos($id_invernadero)
