@@ -25,3 +25,6 @@ $routes->post('/habitaciones/cambiarDisponibilidad', 'HabitacionController::camb
 $routes->post('/habitaciones/cambiarObservacion', 'HabitacionController::cambiarObservacion');
 $routes->post('/habitaciones/borrarHabitacion', 'HabitacionController::borrarHabitacion');
 $routes->post('/habitaciones/getInfo', 'HabitacionController::getHabitacion');
+
+/* Rentas */
+$routes->post('rentas/rentarHabitacion', 'Rentas::rentarHabitacion');

@@ -132,33 +132,8 @@
     </div>
 </div>
 
-<!-- <div class="modal modal-xl fade" id="modalRentar" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-    role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">Rentar habitación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="numeroHabitacion" class="form-label">Nombre del huesped</label>
-                    <input type="number" class="form-control" id="numeroHabitacion" placeholder="Ejemplo: 21">
-                </div>
-                <div class="mb-3">
-                    <label for="numeroHabitacion" class="form-label">Número de habitación</label>
-                    <input type="number" class="form-control" id="numeroHabitacion" placeholder="Ejemplo: 21">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="guardarHabitacion()">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <!-- Modal Rentar -->
-<div class="modal modal-xl fade" id="modalRentar" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+<!-- <div class="modal modal-xl fade" id="modalRentar" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
     role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -167,7 +142,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Tipo de Renta -->
                 <div class="mb-3">
                     <label for="tipoRenta" class="form-label">Tipo de Renta</label>
                     <select class="form-select" id="tipoRenta" onchange="cambiarTipoRenta()">
@@ -176,13 +150,10 @@
                     </select>
                 </div>
                 <input type="text" name="" id="precioHabitacionModal" hidden>
-                <!-- Número de Habitación -->
                 <div class="mb-3">
                     <label class="form-label">Número de Habitación</label>
                     <p id="numHabitacion" class="form-control-plaintext fw-bold"></p>
                 </div>
-
-                <!-- Información del Huésped (solo para renta por noche) -->
                 <div id="informacionHuesped" class="d-none">
                     <h6 class="fw-bold mt-3">Información del Huésped</h6>
                     <div class="mb-3">
@@ -190,12 +161,18 @@
                         <input type="text" class="form-control" id="nombreHuesped" placeholder="Ejemplo: Juan Pérez">
                     </div>
                     <div class="mb-3">
+                        <label for="nombreHuesped" class="form-label">Teléfono de contato</label>
+                        <input type="text" class="form-control" id="nombreHuesped" placeholder="Ejemplo: Juan Pérez">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombreHuesped" class="form-label">Correo electrónico</label>
+                        <input type="text" class="form-control" id="nombreHuesped" placeholder="Ejemplo: Juan Pérez">
+                    </div>
+                    <div class="mb-3">
                         <label for="numNoches" class="form-label">Número de Noches</label>
                         <input type="number" class="form-control" id="numNoches" placeholder="Ejemplo: 2" min="1">
                     </div>
                 </div>
-
-                <!-- Fechas y Horas -->
                 <div class="mb-3">
                     <label for="fechaInicio" class="form-label">Fecha y Hora de Inicio</label>
                     <input type="datetime-local" class="form-control" id="fechaInicio">
@@ -204,15 +181,11 @@
                     <label for="fechaFin" class="form-label">Fecha y Hora de Fin</label>
                     <input type="datetime-local" class="form-control" id="fechaFin">
                 </div>
-
-                <!-- Observaciones -->
                 <div class="mb-3">
                     <label for="observaciones" class="form-label">Observaciones</label>
                     <textarea class="form-control" id="observaciones" rows="3"
                         placeholder="Notas adicionales..."></textarea>
                 </div>
-
-                <!-- Total Calculado -->
                 <div class="mb-3">
                     <label for="total" class="form-label">Total</label>
                     <input type="text" class="form-control" id="total" readonly>
@@ -220,12 +193,85 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="guardarRenta()">Guardar</button>
+                <button type="button" class="btn btn-primary" id="guardarRenta"
+                    onclick="guardarRenta()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="modal modal-xl fade" id="modalRentar" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">Rentar Habitación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="total" class="form-label">Total</label>
+                    <input type="text" class="form-control" id="total" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="tipoRenta" class="form-label">Tipo de Renta</label>
+                    <select class="form-select" id="tipoRenta" onchange="cambiarTipoRenta()">
+                        <option value="horas">Por horas</option>
+                        <option value="noche">Por noche</option>
+                    </select>
+                </div>
+                <input type="text" id="precioHabitacionModal" hidden>
+                <div class="mb-3">
+                    <label class="form-label">Número de Habitación</label>
+                    <p id="numHabitacion" class="form-control-plaintext fw-bold"></p>
+                </div>
+                <div id="informacionHuesped" class="d-none">
+                    <h6 class="fw-bold mt-3">Información del Huésped</h6>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label for="nombreHuesped" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreHuesped" placeholder="Juan Pérez">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefonoHuesped" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefonoHuesped" placeholder="555-555-5555">
+                        </div>
+                    </div>
+                    <div class="row g-2 mt-2">
+                        <div class="col-md-6">
+                            <label for="correoHuesped" class="form-label">Correo</label>
+                            <input type="email" class="form-control" id="correoHuesped" placeholder="email@ejemplo.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="numNoches" class="form-label">Noches</label>
+                            <input type="number" class="form-control" id="numNoches" placeholder="2" min="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2 mt-3">
+                    <div class="col-md-6">
+                        <label for="fechaInicio" class="form-label">Fecha y Hora de Inicio</label>
+                        <input type="datetime-local" class="form-control" id="fechaInicio">
+                    </div>
+                    <div class="col-md-6 d-none" id="fechaFinContainer">
+                        <label for="fechaFin" class="form-label">Fecha y Hora de Fin</label>
+                        <input type="datetime-local" class="form-control" id="fechaFin">
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label for="observaciones" class="form-label">Observaciones</label>
+                    <textarea class="form-control" id="observaciones" rows="2"
+                        placeholder="Notas adicionales..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="guardarRenta"
+                    onclick="guardarRenta()">Guardar</button>
             </div>
         </div>
     </div>
 </div>
-
 
 
 
@@ -286,32 +332,12 @@
         document.getElementById('totalLibres').textContent = totalLibres;
         document.getElementById('totalReservadas').textContent = totalReservadas;
     }
+
     document.addEventListener('DOMContentLoaded', actualizarTablaEstados);
 
-    /* function rentar(element, habitacionId) {
-        // Obtener el número de habitación desde el elemento this
-        const numHabitacion = element.closest('.card').querySelector('.card-title').textContent.split(': ')[1];
-
-        // Actualizar el modal con el número de habitación
-        document.getElementById('numHabitacion').textContent = numHabitacion;
-
-        // Abrir el modal
-        const modal = new bootstrap.Modal(document.getElementById('modalRentar'));
-        modal.show();
-    } */
-
-
-    /* function rentar(element, habitacionId) {
-        const numHabitacion = element.closest('.card').querySelector('.card-title').textContent.split(': ')[1];
-        document.getElementById('numHabitacion').textContent = numHabitacion;
-        const modal = new bootstrap.Modal(document.getElementById('modalRentar'));
-        modal.show();
-        document.getElementById('tipoRenta').value = 'horas';
-        cambiarTipoRenta();
-        $('#modalRentar').modal('show');
-    } */
-
-    function rentar(element, habitacionId) {
+    function rentar(element, habitacion_id) {
+        const guardarRentaBtn = document.getElementById('guardarRenta');
+        guardarRentaBtn.onclick = () => guardarRenta(habitacion_id, element);
         const precioHabitacionTexto = element.closest('.card').querySelector('.precio-habitacion').textContent;
         const precioHabitacion = parseFloat(precioHabitacionTexto.replace('Precio por Noche: $', '').replace(',', '').trim());
         console.log(precioHabitacion);
@@ -323,22 +349,6 @@
         document.getElementById('tipoRenta').value = 'horas';
         cambiarTipoRenta();
     }
-
-
-    /* function cambiarTipoRenta() {
-        const tipoRenta = document.getElementById('tipoRenta').value;
-        const informacionHuesped = document.getElementById('informacionHuesped');
-        const fechaFinContainer = document.getElementById('fechaFinContainer');
-
-        if (tipoRenta === 'noche') {
-            informacionHuesped.classList.remove('d-none');
-            fechaFinContainer.classList.add('d-none'); // Fecha de fin no manual para noches
-        } else {
-            informacionHuesped.classList.add('d-none');
-            fechaFinContainer.classList.remove('d-none'); // Fecha de fin manual para horas
-        }
-        calcularTotal();
-    } */
 
     function cambiarTipoRenta() {
         const tipoRenta = document.getElementById('tipoRenta').value;
@@ -353,29 +363,7 @@
             fechaFinContainer.classList.remove('d-none');
             document.getElementById('fechaFinContainer').addEventListener('change', calcularTotal);
         }
-        /* calcularTotal(); */
     }
-
-
-    /* function calcularTotal() {
-        const tipoRenta = document.getElementById('tipoRenta').value;
-        const numNoches = parseInt(document.getElementById('numNoches').value || 0, 10);
-        const fechaInicio = document.getElementById('fechaInicio').value;
-        const fechaFin = document.getElementById('fechaFin').value;
-
-        let total = 0;
-
-        if (tipoRenta === 'noche' && numNoches > 0) {
-            const precioPorNoche = 100; // Ejemplo: $100 por noche
-            total = precioPorNoche * numNoches;
-        } else if (tipoRenta === 'horas' && fechaInicio && fechaFin) {
-            const precioPorHora = 10; // Ejemplo: $10 por hora
-            const horas = (new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60);
-            total = precioPorHora * Math.ceil(horas);
-        }
-
-        document.getElementById('total').value = `$${total.toFixed(2)}`;
-    } */
 
     function calcularTotal() {
         const tipoRenta = document.getElementById('tipoRenta').value;
@@ -383,8 +371,6 @@
         const fechaInicio = document.getElementById('fechaInicio').value;
         const fechaFin = document.getElementById('fechaFin').value;
 
-        /* const precioHabitacion = parseFloat(document.getElementById('precioHabitacion').value || 0); */
-        // Obtener el precio de la habitación desde el texto
         var precioHabitacion = document.getElementById('precioHabitacionModal').value;
         console.log(precioHabitacion);
         let total = 0;
@@ -392,34 +378,37 @@
         if (tipoRenta === 'noche' && numNoches > 0) {
             total = precioHabitacion * numNoches;
         } else if (tipoRenta === 'horas' && fechaInicio && fechaFin) {
-            const precioPorHora = 10; // Ejemplo: $10 por hora
+            const precioPorHora = 70;
             const horas = (new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60);
             total = precioPorHora * Math.ceil(horas);
         }
-
         document.getElementById('total').value = `$${total.toFixed(2)}`;
     }
 
+    function guardarRenta(habitacion_id, elemento) {
 
-    function guardarRenta() {
         const tipoRenta = document.getElementById('tipoRenta').value;
-        const numHabitacion = document.getElementById('numHabitacion').value;
+        const numHabitacion = document.getElementById('numHabitacion').textContent;
         const nombreHuesped = document.getElementById('nombreHuesped').value || null;
+        const correoHuesped = document.getElementById('correoHuesped').value || null;
+        const telefonoHuesped = document.getElementById('telefonoHuesped').value || null;
         const numNoches = document.getElementById('numNoches').value || null;
         const fechaInicio = document.getElementById('fechaInicio').value;
         const fechaFin = document.getElementById('fechaFin').value || null;
         const observaciones = document.getElementById('observaciones').value;
         const total = parseFloat(document.getElementById('total').value.replace('$', ''));
 
-        if (!numHabitacion || !fechaInicio || (!fechaFin && tipoRenta === 'horas')) {
+        if (!fechaInicio || (!fechaFin && tipoRenta === 'horas')) {
             alert('Por favor, complete todos los campos requeridos.');
             return;
         }
-
         const renta = {
+            habitacion_id,
             tipoRenta,
             numHabitacion,
             nombreHuesped,
+            correoHuesped,
+            telefonoHuesped,
             numNoches,
             fechaInicio,
             fechaFin,
@@ -428,9 +417,55 @@
         };
 
         console.log('Datos de la renta:', renta);
+        $.ajax({
+            url: base_url + "rentas/rentarHabitacion",
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({ data: renta }),
+            success: function (response) {
+                if (response.status === "success") {
+                    console.log(response.data);
+                    var estado = "ocupada";
+                    const card = elemento.closest(".card");
+                    card.classList.remove(
+                        "border-success",
+                        "text-success",
+                        "border-danger",
+                        "text-danger",
+                        "border-warning",
+                        "text-warning"
+                    );
+                    const estadoText = card.querySelector("p");
+                    switch (estado) {
+                        case "libre":
+                            card.classList.add("border-success", "text-success");
+                            estadoText.textContent = "Estado: Libre";
+                            break;
+                        case "no_disponible":
+                            card.classList.add("border-secondary", "text-secondary");
+                            estadoText.textContent = "Estado: No Disponible";
+                            break;
+                        case "ocupada":
+                            card.classList.add("border-danger", "text-danger");
+                            estadoText.textContent = "Estado: Ocupada";
+                            break;
+                        case "reservada":
+                            card.classList.add("border-warning", "text-warning");
+                            estadoText.textContent = "Estado: Reservada";
+                            break;
+                        default:
+                            estadoText.textContent = "Estado: Desconocido";
+                            break;
+                    }
+                    $('#modalRentar').modal('hide');
+                } else {
+                }
+            },
+            error: function (error) {
+            },
+        });
 
-        // Cerrar modal
-        $('#modalRentar').modal('hide');
     }
 
 </script>

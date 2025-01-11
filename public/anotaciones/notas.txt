@@ -1,0 +1,16 @@
+
+
+
+La renta de la habitacion puntos a conciderar
+[] Cambiar el estado de la habitacion
+[] Guardar la renta
+[] Pensar en el manejo de las habitaciones rentadas, tema, No poder cambiar sus estados mientas esten rentadas,
+no poder editarlas, no poder rentarlas.
+[] Realizar otro apartado para desglozar las rentas realizadas en el dia - mes - meses - anio.
+    [] Realizar consulta personal de que quieren en ese apartado
+    [] Realizar consulta de que necesitan en el apartado de rentas, como lo realizan y demas.
+[] 
+
+Tipo de renta
+1 renta por horas
+2 renta por noches (este toma el precio por noche de la habitacion y pues calcula el total)
