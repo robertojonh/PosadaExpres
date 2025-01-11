@@ -74,6 +74,8 @@ class Filters extends BaseConfig
         "Sesiones" => [
             "before" => [
                 "/",
+                "/Inicio",
+                "/habitaciones",
             ]
         ]
 

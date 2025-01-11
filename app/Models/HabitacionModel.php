@@ -34,4 +34,11 @@ class HabitacionModel extends Model
             ->update(['observaciones' => $observacion]);
     }
 
+    public function borrarHabitacion($habitacion_id)
+    {
+        $this->db->table('habitaciones')
+            ->where('habitacion_id', $habitacion_id)
+            ->delete();
+    }
+
 }

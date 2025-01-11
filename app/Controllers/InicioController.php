@@ -6,8 +6,16 @@ use App\Controllers\BaseController;
 
 class InicioController extends BaseController
 {
+    private $habitacionModel;
+    private $habitacionController;
+    public function __construct()
+    {
+        $this->habitacionModel = model('HabitacionModel');
+        $this->habitacionController = new \App\Controllers\HabitacionController();
+    }
     public function index()
     {
-        return view('Inicio/InicioView');
+        $data['habitaciones'] = $this->habitacionModel->getHabitaciones();
+        return view('Inicio/InicioView', $data);
     }
 }

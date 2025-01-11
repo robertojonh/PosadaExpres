@@ -22,3 +22,4 @@ $routes->get('/habitaciones', 'HabitacionController::index');
 $routes->post('/habitaciones/guardarHabitacion', 'HabitacionController::guardarHabitacion');
 $routes->post('/habitaciones/cambiarDisponibilidad', 'HabitacionController::cambiarDisponibilidad');
 $routes->post('/habitaciones/cambiarObservacion', 'HabitacionController::cambiarObservacion');
+$routes->post('/habitaciones/borrarHabitacion', 'HabitacionController::borrarHabitacion');

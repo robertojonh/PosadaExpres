@@ -51,4 +51,11 @@ class HabitacionController extends BaseController
         return $this->response->setJSON(['status' => 'success']);
     }
 
+    public function borrarHabitacion()
+    {
+        $datosJson = $this->request->getJSON();
+        $this->model->borrarHabitacion($datosJson->habitacion_id);
+        return $this->response->setJSON(['status' => 'success']);
+    }
+
 }
