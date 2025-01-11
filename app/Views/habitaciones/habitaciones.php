@@ -3,7 +3,7 @@
 <div class="col-12 mt-5" style="padding: 0.5rem;">
     <div class="card">
         <div class="card-body">
-            <button class="btn btn-outline-primary" onclick="nuevaHabitacion()">
+            <button class="btn btn-outline-primary" onclick="modalHabitacion('agregar')">
                 <i class="fas fa-2x fa-solid fa-square-plus"></i> Agregar Habitación
             </button>
             <div class="row row-cols-1 row-cols-md-4 g-3" style="padding-top: 2rem;" id="row">
@@ -34,6 +34,10 @@
                                 <p class="text-center fw-bold">
                                     Estado: <?= ucfirst($habitacion->estado) ?>
                                 </p>
+                                <p class="text-center">Precio por Noche: $<?= number_format($habitacion->precio, 2) ?>
+                                </p>
+                                <p class="text-center">Número de camas: <?= $habitacion->num_camas ?>
+                                </p>
                                 <div class="dropdown position-absolute bottom-0 end-0 me-2 mb-2">
                                     <button class="btn btn-sm btn-outline-secondary" type="button"
                                         id="dropdownMenuButton<?= $habitacion->habitacion_id ?>" data-bs-toggle="dropdown"
@@ -43,6 +47,10 @@
                                     <ul class="dropdown-menu dropdown-menu-end"
                                         aria-labelledby="dropdownMenuButton<?= $habitacion->habitacion_id ?>">
                                         <li>
+                                            <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                                                onclick="modalHabitacion('modificar', '<?= $habitacion->habitacion_id ?>',this)">
+                                                Editar
+                                            </a>
                                             <a class="dropdown-item text-secondary" style="cursor: pointer;"
                                                 onclick="cambiarDisponibilidad(this, '<?= $habitacion->habitacion_id ?>','libre')">
                                                 Desocupada
@@ -74,9 +82,9 @@
 </div>
 
 
-<div class="modal modal-xl fade" id="modalNuevaHabitacion" tabindex="-1" data-bs-backdrop="static"
-    data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+<div class="modal modal-xl fade" id="modalHabitacion" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitleId">Nueva Habitación</h5>
@@ -96,13 +104,13 @@
                     <input type="text" class="form-control" id="precioNoche" placeholder="Ejemplo: 1500.00">
                 </div>
                 <div class="mb-3">
-                    <label for="observaciones" class="form-label">Observacion</label>
+                    <label for="observaciones" class="form-label">Observaciones</label>
                     <input type="text" class="form-control" id="observaciones"
-                        placeholder="Habitacion de solo reservacion">
+                        placeholder="Habitación de solo reservación">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="guardarHabitacion()">Guardar</button>
+                <button type="button" class="btn btn-primary" id="modalHabitacionGuardar">Guardar</button>
             </div>
         </div>
     </div>

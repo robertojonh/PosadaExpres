@@ -1,6 +1,90 @@
-function nuevaHabitacion() {
-  $("#modalNuevaHabitacion").modal("show");
+function modalHabitacion(tipo, habitacion_id = null, elemento) {
+  const modalTitle = document.getElementById("modalTitleId");
+  const guardarBtn = document.getElementById("modalHabitacionGuardar");
+
+  document.getElementById("numeroHabitacion").value = "";
+  document.getElementById("numeroCamas").value = "";
+  document.getElementById("precioNoche").value = "";
+  document.getElementById("observaciones").value = "";
+
+  if (tipo === "agregar") {
+    modalTitle.textContent = "Nueva Habitación";
+    guardarBtn.textContent = "Guardar";
+    guardarBtn.setAttribute("onclick", "guardarHabitacion()");
+    $("#modalHabitacion").modal("show");
+  } else if (tipo === "modificar") {
+    modalTitle.textContent = "Editar Habitación";
+    guardarBtn.textContent = "Actualizar";
+    guardarBtn.onclick = () => modificarHabitacion(habitacion_id, elemento);
+
+    $.ajax({
+      url: base_url + "habitaciones/getInfo",
+      type: "POST",
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify({ habitacion_id: habitacion_id }),
+      success: function (response) {
+        if (response.status === "success") {
+          const data = response.data;
+          document.getElementById("numeroHabitacion").value = data.num || "";
+          document.getElementById("numeroCamas").value = data.num_camas || "";
+          document.getElementById("precioNoche").value = data.precio || "";
+          document.getElementById("observaciones").value = data.observaciones || "";
+          $("#modalHabitacion").modal("show");
+        } else {
+        }
+      },
+      error: function (error) {
+      },
+    });
+  }
 }
+
+function modificarHabitacion(habitacion_id, elemento) {
+  const numeroHabitacion = $("#numeroHabitacion").val();
+  const numeroCamas = $("#numeroCamas").val();
+  const precioNoche = $("#precioNoche").val();
+  const observaciones = $("#observaciones").val();
+  if (!numeroHabitacion || !numeroCamas || !precioNoche) {
+    showNotification(
+      "custom",
+      "warning",
+      "Datos incompletos",
+      "Es necesario completar todos los campos"
+    );
+    return;
+  }
+  $.ajax({
+    url: base_url + "habitaciones/modificarHabitacion",
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json",
+    data: JSON.stringify({
+      habitacion_id: habitacion_id,
+      numeroHabitacion: numeroHabitacion,
+      numeroCamas: numeroCamas,
+      precioNoche: precioNoche,
+      observaciones: observaciones,
+    }),
+    success: function (response) {
+      if (response.status === "success") {
+        const card = $(elemento).closest(".card");
+        card.find(".card-title").text(`Habitación Número: ${numeroHabitacion}`);
+        card.find(".card-text:nth-of-type(1)").text(`Número de Camas: ${numeroCamas}`);
+        card.find(".card-text:nth-of-type(2)").text(`Precio por Noche: $${parseFloat(precioNoche).toFixed(2)}`);
+        card.find(".card-text:nth-of-type(3)").text(`Observaciones: ${observaciones}`);
+        $("#modalHabitacion").modal("hide");
+        showNotification("custom", "success", "Habitación Actualizada", "La información se actualizó correctamente.");
+      } else {
+        showNotification("custom", "error", "Error", "No se pudo actualizar la información.");
+      }
+    },
+    error: function (error) {
+      showNotification("custom", "error", "Error", "Ocurrió un problema al actualizar.");
+    },
+  });
+}
+
 
 function guardarHabitacion() {
   const numeroHabitacion = $("#numeroHabitacion").val();
@@ -30,7 +114,7 @@ function guardarHabitacion() {
       observaciones: observaciones,
     }),
     success: function (response) {
-      if (response.status) {
+      if (response.status == "success") {
         const habitacionId = response.habitacion_id;
         const nuevoCard = `
                 <div class="col foto">
@@ -154,7 +238,7 @@ function cambiarDescripcion(elemento, habitacion_id) {
           textarea.data("original-value", currentValue);
         }
       },
-      error: function (resp) {},
+      error: function (resp) { },
     });
   }
 }
@@ -177,7 +261,7 @@ function borrarHabitacion(elemento, habitacion_id) {
         } else {
         }
       },
-      error: function (error) {},
+      error: function (error) { },
     });
   }
 }

@@ -13,11 +13,23 @@ class HabitacionModel extends Model
         return $this->db->query("SELECT * FROM habitaciones")->getResult();
     }
 
+    public function getHabitacion($habitacion_id)
+    {
+        return $this->db->query("SELECT * FROM habitaciones WHERE habitacion_id = ?", [$habitacion_id])->getRow();
+    }
+
     public function guardarHabitacion($data)
     {
         $builder = $this->db->table('habitaciones');
         $builder->insert($data);
         return $this->db->insertID();
+    }
+
+    public function actualizar($habitacion_id, $data)
+    {
+        $this->db->table('habitaciones')
+            ->where('habitacion_id', $habitacion_id)
+            ->update($data);
     }
 
     public function cambiarDisponibilidad($habitacion_id, $nuevo_estado)

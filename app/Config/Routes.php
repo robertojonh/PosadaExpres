@@ -20,6 +20,8 @@ $routes->get('/Inicio', 'InicioController::index');
 /* Habitaciones */
 $routes->get('/habitaciones', 'HabitacionController::index');
 $routes->post('/habitaciones/guardarHabitacion', 'HabitacionController::guardarHabitacion');
+$routes->post('/habitaciones/modificarHabitacion', 'HabitacionController::modificarHabitacion');
 $routes->post('/habitaciones/cambiarDisponibilidad', 'HabitacionController::cambiarDisponibilidad');
 $routes->post('/habitaciones/cambiarObservacion', 'HabitacionController::cambiarObservacion');
 $routes->post('/habitaciones/borrarHabitacion', 'HabitacionController::borrarHabitacion');
+$routes->post('/habitaciones/getInfo', 'HabitacionController::getHabitacion');
