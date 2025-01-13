@@ -8,8 +8,26 @@ class HabitacionModel extends Model
 {
 
 
-    public function getHabitaciones()
+    public function getHabitaciones($filtro = 1)
     {
+        if ($filtro != 1) {
+            $sql = "SELECT h.*, r.renta_id,r.tipo,r.nombre_huesped,r.num_telefono,r.correo_e,r.num_noches,r.total,r.observaciones,r.fecha_inicio,r.fecha_fin
+FROM habitaciones AS h
+LEFT JOIN (
+    SELECT r1.*
+    FROM rentas AS r1
+    INNER JOIN (
+        SELECT habitacion_id, MAX(fecha) AS ultima_renta
+        FROM rentas
+        GROUP BY habitacion_id
+    ) AS ultimas_rentas
+    ON r1.habitacion_id = ultimas_rentas.habitacion_id
+    AND r1.fecha = ultimas_rentas.ultima_renta
+) AS r ON r.habitacion_id = h.habitacion_id
+AND h.estado = 'ocupada'
+WHERE h.estado != 'no_disponible';";
+            return $this->db->query($sql)->getResult();
+        }
         return $this->db->query("SELECT * FROM habitaciones")->getResult();
     }
 

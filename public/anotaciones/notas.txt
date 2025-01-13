@@ -14,3 +14,75 @@ no poder editarlas, no poder rentarlas.
 Tipo de renta
 1 renta por horas
 2 renta por noches (este toma el precio por noche de la habitacion y pues calcula el total)
+
+
+<!-- <div class="row row-cols-1 row-cols-md-4 g-3" style="padding-top: 2rem;" id="row">
+                <?php foreach ($habitaciones as $habitacion):
+                    $estadoClase = '';
+                    switch ($habitacion->estado) {
+                        case 'libre':
+                            $estadoClase = 'border-success text-success';
+                            break;
+                        case 'ocupada':
+                            $estadoClase = 'border-danger text-danger';
+                            break;
+                        case 'reservada':
+                            $estadoClase = 'border-warning text-warning';
+                            break;
+                        case 'no_disponible':
+                            $estadoClase = 'border-secondary text-secondary';
+                            break;
+                        default:
+                            $estadoClase = 'border-secondary text-secondary';
+                            break;
+                    }
+                    ?>
+                    <div class="col">
+                        <div class="card shadow-sm h-100 <?= $estadoClase ?>" style="border-width: 2px;">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Habitación Número: <?= $habitacion->num ?></h5>
+                                <p class="text-center fw-bold">
+                                    Estado: <?= ucfirst($habitacion->estado) ?>
+                                </p>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <?php for ($i = 1; $i <= $habitacion->num_camas; $i++): ?>
+                                        <i class="fas fa-2x fa-solid fa-bed me-2"></i>
+                                    <?php endfor; ?>
+                                </div>
+                                <p id="precioHabitacion" class="text-center precio-habitacion">
+                                    Precio por Noche: $<?= number_format($habitacion->precio, 2) ?></p>
+                                <div class="dropdown position-absolute bottom-0 end-0 me-2 mb-2">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button"
+                                        id="dropdownMenuButton<?= $habitacion->habitacion_id ?>" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <i class="fas fa-list-ul"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end"
+                                        aria-labelledby="dropdownMenuButton<?= $habitacion->habitacion_id ?>">
+                                        <li>
+                                            <?php if ($habitacion->estado == "libre"): ?>
+                                                <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                                                    onclick="rentar(this, '<?= $habitacion->habitacion_id ?>')">
+                                                    Rentar
+                                                </a>
+                                                <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                                                    onclick="reservar(this, '<?= $habitacion->habitacion_id ?>')">
+                                                    Reservar
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if ($habitacion->estado == "ocupada"): ?>
+                                                <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                                                    onclick="desocupar(this, '<?= $habitacion->habitacion_id ?>')">
+                                                    Liberar
+                                                </a>
+
+                                            <?php endif; ?>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <?php endforeach; ?>
+            </div> -->

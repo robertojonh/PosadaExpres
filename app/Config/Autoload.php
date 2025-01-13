@@ -44,9 +44,17 @@ class Autoload extends AutoloadConfig
      * @var array<string, array<int, string>|string>
      * @phpstan-var array<string, string|list<string>>
      */
+    /* public $psr4 = [
+        APP_NAMESPACE => APPPATH, // For custom app namespace
+        'Config' => APPPATH . 'Config',
+    ]; */
+
     public $psr4 = [
         APP_NAMESPACE => APPPATH, // For custom app namespace
-        'Config'      => APPPATH . 'Config',
+        'Config' => APPPATH . 'Config',
+        'Dompdf' => APPPATH . 'ThirdParty/dompdf/src',
+        'Mpdf' => APPPATH . 'ThirdParty/mpdf/src',
+        'App\Commands' => APPPATH . 'Commands',
     ];
 
     /**
@@ -98,5 +106,5 @@ class Autoload extends AutoloadConfig
      * @var string[]
      * @phpstan-var list<string>
      */
-    public $helpers = [];
+    public $helpers = ['utils'];
 }

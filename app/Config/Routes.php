@@ -8,23 +8,26 @@ use CodeIgniter\Router\RouteCollection;
 /* $routes->get('/', 'Home::index'); */
 
 /* Home */
-$routes->get('/', 'InicioController::index');
-$routes->get('/home', 'InicioController::index');
+
 
 /* Inicio de sesion */
-$routes->get('/Login', 'LoginController::index');
-$routes->post('/acceder', 'LoginController::Login');
-$routes->get('/Salir', 'LoginController::Salir');
-$routes->get('/Inicio', 'InicioController::index');
+$routes->get('/Login', 'Login::index');
+$routes->post('/acceder', 'Login::Login');
+$routes->get('/Salir', 'Login::Salir');
+
+/* Home */
+$routes->get('/Inicio', 'Inicio::index');
+$routes->get('/', 'Inicio::index');
+$routes->get('/home', 'Inicio::index');
 
 /* Habitaciones */
-$routes->get('/habitaciones', 'HabitacionController::index');
-$routes->post('/habitaciones/guardarHabitacion', 'HabitacionController::guardarHabitacion');
-$routes->post('/habitaciones/modificarHabitacion', 'HabitacionController::modificarHabitacion');
-$routes->post('/habitaciones/cambiarDisponibilidad', 'HabitacionController::cambiarDisponibilidad');
-$routes->post('/habitaciones/cambiarObservacion', 'HabitacionController::cambiarObservacion');
-$routes->post('/habitaciones/borrarHabitacion', 'HabitacionController::borrarHabitacion');
-$routes->post('/habitaciones/getInfo', 'HabitacionController::getHabitacion');
+$routes->get('/habitaciones', 'Habitacion::index');
+$routes->post('/habitaciones/guardarHabitacion', 'Habitacion::guardarHabitacion');
+$routes->post('/habitaciones/modificarHabitacion', 'Habitacion::modificarHabitacion');
+$routes->post('/habitaciones/cambiarDisponibilidad', 'Habitacion::cambiarDisponibilidad');
+$routes->post('/habitaciones/cambiarObservacion', 'Habitacion::cambiarObservacion');
+$routes->post('/habitaciones/borrarHabitacion', 'Habitacion::borrarHabitacion');
+$routes->post('/habitaciones/getInfo', 'Habitacion::getHabitacion');
 
 /* Rentas */
 $routes->post('rentas/rentarHabitacion', 'Rentas::rentarHabitacion');

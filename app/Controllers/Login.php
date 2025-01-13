@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class LoginController extends BaseController
+class Login extends BaseController
 {
     private $loginFails;
     private $userModel;

@@ -63,13 +63,13 @@
                     </table>
                 </div>
             </div>
-
-            <!-- Listado de las habitaciones -->
             <div class="text-center">
                 <h3>Lista de habitaciones</h3>
             </div>
+
             <div class="row row-cols-1 row-cols-md-4 g-3" style="padding-top: 2rem;" id="row">
                 <?php foreach ($habitaciones as $habitacion):
+                    /* print_r($habitacion); */
                     $estadoClase = '';
                     switch ($habitacion->estado) {
                         case 'libre':
@@ -91,36 +91,70 @@
                     ?>
                     <div class="col">
                         <div class="card shadow-sm h-100 <?= $estadoClase ?>" style="border-width: 2px;">
-                            <div class="card-body">
-                                <h5 class="card-title text-center">Habitación Número: <?= $habitacion->num ?></h5>
-                                <p class="text-center fw-bold">
-                                    Estado: <?= ucfirst($habitacion->estado) ?>
-                                </p>
-                                <div class="d-flex justify-content-center align-items-center">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-center mb-3">Habitación Número: <?= $habitacion->num ?></h5>
+                                <p class="text-center fw-bold">Estado: <?= ucfirst($habitacion->estado) ?></p>
+                                <?php if ($habitacion->estado == "ocupada" && isset($habitacion->renta_id)): ?>
+                                    <button class="btn btn-outline-primary btn-sm mb-3" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#rentaInfo<?= $habitacion->habitacion_id ?>" aria-expanded="false"
+                                        aria-controls="rentaInfo<?= $habitacion->habitacion_id ?>">
+                                        Ver Detalles de Renta
+                                    </button>
+                                    <div class="collapse" id="rentaInfo<?= $habitacion->habitacion_id ?>">
+                                        <div class="bg-light p-3 rounded border">
+                                            <?php if ($habitacion->tipo == 1): ?>
+                                                <p><strong>Tipo:</strong> <span class="text-primary">Por Horas</span></p>
+                                                <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?></p>
+                                                <p><strong>Fin:</strong> <?= formato_fecha($habitacion->fecha_fin, 10) ?></p>
+                                            <?php elseif ($habitacion->tipo == 2): ?>
+                                                <p><strong>Tipo:</strong> <span class="text-primary">Por Noche</span></p>
+                                                <p><strong>Huésped:</strong> <?= $habitacion->nombre_huesped ?></p>
+                                                <p><strong>Teléfono:</strong> <?= $habitacion->num_telefono ?></p>
+                                                <p><strong>Noches:</strong> <?= $habitacion->num_noches ?></p>
+                                                <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?></p>
+                                            <?php endif; ?>
+                                            <p><strong>Observaciones:</strong> <?= $habitacion->observaciones ?></p>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="d-flex justify-content-center align-items-center my-3">
                                     <?php for ($i = 1; $i <= $habitacion->num_camas; $i++): ?>
                                         <i class="fas fa-2x fa-solid fa-bed me-2"></i>
                                     <?php endfor; ?>
                                 </div>
-                                <p id="precioHabitacion" class="text-center precio-habitacion">
-                                    Precio por Noche: $<?= number_format($habitacion->precio, 2) ?></p>
-                                <div class="dropdown position-absolute bottom-0 end-0 me-2 mb-2">
-                                    <button class="btn btn-sm btn-outline-secondary" type="button"
+                                <p id="precioHabitacion" class="text-center fw-bold text-secondary precio-habitacion">
+                                    Precio por Noche: $<?= number_format($habitacion->precio, 2) ?>
+                                </p>
+                                <div class="dropdown mt-auto">
+                                    <button class="btn btn-outline-secondary btn-sm w-100" type="button"
                                         id="dropdownMenuButton<?= $habitacion->habitacion_id ?>" data-bs-toggle="dropdown"
                                         aria-expanded="false">
-                                        <i class="fas fa-list-ul"></i>
+                                        <i class="fas fa-list-ul me-1"></i> Opciones
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end"
                                         aria-labelledby="dropdownMenuButton<?= $habitacion->habitacion_id ?>">
-                                        <li>
-                                            <a class="dropdown-item text-secondary" style="cursor: pointer;"
-                                                onclick="rentar(this, '<?= $habitacion->habitacion_id ?>')">
-                                                Rentar
-                                            </a>
-                                            <a class="dropdown-item text-secondary" style="cursor: pointer;"
-                                                onclick="reservar(this, '<?= $habitacion->habitacion_id ?>')">
-                                                Reservar
-                                            </a>
-                                        </li>
+                                        <?php if ($habitacion->estado == "libre"): ?>
+                                            <li>
+                                                <a class="dropdown-item" style="cursor: pointer;"
+                                                    onclick="rentar(this, '<?= $habitacion->habitacion_id ?>')">
+                                                    Rentar
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" style="cursor: pointer;"
+                                                    onclick="reservar(this, '<?= $habitacion->habitacion_id ?>')">
+                                                    Reservar
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($habitacion->estado == "ocupada"): ?>
+                                            <li>
+                                                <a class="dropdown-item" style="cursor: pointer;"
+                                                    onclick="desocupar(this, '<?= $habitacion->habitacion_id ?>')">
+                                                    Liberar
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
                             </div>
@@ -131,74 +165,6 @@
         </div>
     </div>
 </div>
-
-<!-- Modal Rentar -->
-<!-- <div class="modal modal-xl fade" id="modalRentar" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-    role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">Rentar Habitación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="tipoRenta" class="form-label">Tipo de Renta</label>
-                    <select class="form-select" id="tipoRenta" onchange="cambiarTipoRenta()">
-                        <option value="horas">Por horas</option>
-                        <option value="noche">Por noche</option>
-                    </select>
-                </div>
-                <input type="text" name="" id="precioHabitacionModal" hidden>
-                <div class="mb-3">
-                    <label class="form-label">Número de Habitación</label>
-                    <p id="numHabitacion" class="form-control-plaintext fw-bold"></p>
-                </div>
-                <div id="informacionHuesped" class="d-none">
-                    <h6 class="fw-bold mt-3">Información del Huésped</h6>
-                    <div class="mb-3">
-                        <label for="nombreHuesped" class="form-label">Nombre del Huésped</label>
-                        <input type="text" class="form-control" id="nombreHuesped" placeholder="Ejemplo: Juan Pérez">
-                    </div>
-                    <div class="mb-3">
-                        <label for="nombreHuesped" class="form-label">Teléfono de contato</label>
-                        <input type="text" class="form-control" id="nombreHuesped" placeholder="Ejemplo: Juan Pérez">
-                    </div>
-                    <div class="mb-3">
-                        <label for="nombreHuesped" class="form-label">Correo electrónico</label>
-                        <input type="text" class="form-control" id="nombreHuesped" placeholder="Ejemplo: Juan Pérez">
-                    </div>
-                    <div class="mb-3">
-                        <label for="numNoches" class="form-label">Número de Noches</label>
-                        <input type="number" class="form-control" id="numNoches" placeholder="Ejemplo: 2" min="1">
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="fechaInicio" class="form-label">Fecha y Hora de Inicio</label>
-                    <input type="datetime-local" class="form-control" id="fechaInicio">
-                </div>
-                <div id="fechaFinContainer" class="mb-3 d-none">
-                    <label for="fechaFin" class="form-label">Fecha y Hora de Fin</label>
-                    <input type="datetime-local" class="form-control" id="fechaFin">
-                </div>
-                <div class="mb-3">
-                    <label for="observaciones" class="form-label">Observaciones</label>
-                    <textarea class="form-control" id="observaciones" rows="3"
-                        placeholder="Notas adicionales..."></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="total" class="form-label">Total</label>
-                    <input type="text" class="form-control" id="total" readonly>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="guardarRenta"
-                    onclick="guardarRenta()">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <div class="modal modal-xl fade" id="modalRentar" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="modalTitleId" aria-hidden="true">
@@ -340,7 +306,6 @@
         guardarRentaBtn.onclick = () => guardarRenta(habitacion_id, element);
         const precioHabitacionTexto = element.closest('.card').querySelector('.precio-habitacion').textContent;
         const precioHabitacion = parseFloat(precioHabitacionTexto.replace('Precio por Noche: $', '').replace(',', '').trim());
-        console.log(precioHabitacion);
         document.getElementById('precioHabitacionModal').value = precioHabitacion;
         const numHabitacion = element.closest('.card').querySelector('.card-title').textContent.split(': ')[1];
         document.getElementById('numHabitacion').textContent = numHabitacion;
@@ -372,7 +337,6 @@
         const fechaFin = document.getElementById('fechaFin').value;
 
         var precioHabitacion = document.getElementById('precioHabitacionModal').value;
-        console.log(precioHabitacion);
         let total = 0;
 
         if (tipoRenta === 'noche' && numNoches > 0) {
@@ -416,7 +380,6 @@
             total,
         };
 
-        console.log('Datos de la renta:', renta);
         $.ajax({
             url: base_url + "rentas/rentarHabitacion",
             type: "POST",
@@ -425,39 +388,9 @@
             data: JSON.stringify({ data: renta }),
             success: function (response) {
                 if (response.status === "success") {
-                    console.log(response.data);
                     var estado = "ocupada";
-                    const card = elemento.closest(".card");
-                    card.classList.remove(
-                        "border-success",
-                        "text-success",
-                        "border-danger",
-                        "text-danger",
-                        "border-warning",
-                        "text-warning"
-                    );
-                    const estadoText = card.querySelector("p");
-                    switch (estado) {
-                        case "libre":
-                            card.classList.add("border-success", "text-success");
-                            estadoText.textContent = "Estado: Libre";
-                            break;
-                        case "no_disponible":
-                            card.classList.add("border-secondary", "text-secondary");
-                            estadoText.textContent = "Estado: No Disponible";
-                            break;
-                        case "ocupada":
-                            card.classList.add("border-danger", "text-danger");
-                            estadoText.textContent = "Estado: Ocupada";
-                            break;
-                        case "reservada":
-                            card.classList.add("border-warning", "text-warning");
-                            estadoText.textContent = "Estado: Reservada";
-                            break;
-                        default:
-                            estadoText.textContent = "Estado: Desconocido";
-                            break;
-                    }
+                    cambiarEstadoHabitacion(elemento, estado, habitacion_id);
+                    actualizarTablaEstados();
                     $('#modalRentar').modal('hide');
                 } else {
                 }
@@ -465,7 +398,82 @@
             error: function (error) {
             },
         });
+    }
 
+    function desocupar(elemento, habtitacion_id) {
+        var estado = 'libre';
+        $.ajax({
+            url: base_url + "habitaciones/cambiarDisponibilidad",
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({
+                habitacion_id: habtitacion_id,
+                estado: estado
+            }),
+            success: function (response) {
+                if (response.status === "success") {
+
+                    cambiarEstadoHabitacion(elemento, estado, habtitacion_id);
+                    actualizarTablaEstados();
+                    $('#modalRentar').modal('hide');
+                } else {
+                }
+            },
+            error: function (error) {
+            },
+        });
+    }
+
+    function cambiarEstadoHabitacion(elemento, estado, habitacion_id) {
+        const card = elemento.closest(".card");
+        card.classList.remove(
+            "border-success",
+            "text-success",
+            "border-danger",
+            "text-danger",
+            "border-warning",
+            "text-warning"
+        );
+        const estadoText = card.querySelector("p");
+        const dropdownMenu = $(elemento).closest('.dropdown').find('.dropdown-menu');
+        switch (estado) {
+            case "libre":
+                card.classList.add("border-success", "text-success");
+                estadoText.textContent = "Estado: Libre";
+                dropdownMenu.html(`<li>
+                <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                    onclick="rentar(this, '${habitacion_id}')">
+                    Rentar
+                </a>
+                <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                    onclick="reservar(this, '${habitacion_id}')">
+                    Reservar
+                </a>
+            </li>`);
+                break;
+            case "no_disponible":
+                card.classList.add("border-secondary", "text-secondary");
+                estadoText.textContent = "Estado: No Disponible";
+                break;
+            case "ocupada":
+                card.classList.add("border-danger", "text-danger");
+                estadoText.textContent = "Estado: Ocupada";
+                dropdownMenu.html(`<li>
+                <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                    onclick="desocupar(this, '${habitacion_id}')">
+                    Liberar
+                </a>
+            </li>`);
+                break;
+            case "reservada":
+                card.classList.add("border-warning", "text-warning");
+                estadoText.textContent = "Estado: Reservada";
+                break;
+            default:
+                estadoText.textContent = "Estado: Desconocido";
+                break;
+        }
     }
 
 </script>
