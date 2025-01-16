@@ -30,4 +30,6 @@ $routes->post('/habitaciones/borrarHabitacion', 'Habitacion::borrarHabitacion');
 $routes->post('/habitaciones/getInfo', 'Habitacion::getHabitacion');
 
 /* Rentas */
+$routes->get('rentas', 'Rentas::index');
 $routes->post('rentas/rentarHabitacion', 'Rentas::rentarHabitacion');
+$routes->post('rentas/getRentas', 'Rentas::getRentas');

@@ -86,3 +86,151 @@ Tipo de renta
 
                 <?php endforeach; ?>
             </div> -->
+
+Card para agregar info de renta (quitado el 16 de enero)
+/* function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
+  const card = elemento.closest(".card");
+  card.classList.remove(
+    "border-success",
+    "text-success",
+    "border-danger",
+    "text-danger",
+    "border-warning",
+    "text-warning"
+  );
+  const estadoText = card.querySelector("p");
+  const dropdownMenu = $(elemento).closest(".dropdown").find(".dropdown-menu");
+  switch (estado) {
+    case "libre":
+      card.classList.add("border-success", "text-success");
+      estadoText.textContent = "Estado: Libre";
+      dropdownMenu.html(`<li>
+            <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                onclick="rentar(this, '${habitacion_id}')">
+                Rentar
+            </a>
+            <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                onclick="reservar(this, '${habitacion_id}')">
+                Reservar
+            </a>
+        </li>`);
+      break;
+    case "no_disponible":
+      card.classList.add("border-secondary", "text-secondary");
+      estadoText.textContent = "Estado: No Disponible";
+      break;
+    case "ocupada":
+      card.classList.add("border-danger", "text-danger");
+      estadoText.textContent = "Estado: Ocupada";
+      dropdownMenu.html(`<li>
+            <a class="dropdown-item text-secondary" style="cursor: pointer;"
+                onclick="desocupar(this, '${habitacion_id}')">
+                Liberar
+            </a>
+        </li>`);
+      break;
+    case "reservada":
+      card.classList.add("border-warning", "text-warning");
+      estadoText.textContent = "Estado: Reservada";
+      break;
+    default:
+      estadoText.textContent = "Estado: Desconocido";
+      break;
+  }
+} */
+
+/* function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
+  const card = elemento.closest(".card");
+  card.classList.remove(
+    "border-success",
+    "text-success",
+    "border-danger",
+    "text-danger",
+    "border-warning",
+    "text-warning"
+  );
+  const estadoText = card.querySelector("p");
+  const dropdownMenu = $(elemento).closest(".dropdown").find(".dropdown-menu");
+  const cardBody = card.querySelector(".card-body");
+
+  switch (estado) {
+    case "libre":
+      card.classList.add("border-success", "text-success");
+      estadoText.textContent = "Estado: Libre";
+      dropdownMenu.html(`
+        <li>
+          <a class="dropdown-item text-secondary" style="cursor: pointer;"
+              onclick="rentar(this, '${habitacion_id}')">
+              Rentar
+          </a>
+          <a class="dropdown-item text-secondary" style="cursor: pointer;"
+              onclick="reservar(this, '${habitacion_id}')">
+              Reservar
+          </a>
+        </li>
+      `);
+      break;
+    case "no_disponible":
+      card.classList.add("border-secondary", "text-secondary");
+      estadoText.textContent = "Estado: No Disponible";
+      break;
+    case "ocupada":
+      card.classList.add("border-danger", "text-danger");
+      estadoText.textContent = "Estado: Ocupada";
+      dropdownMenu.html(`
+        <li>
+          <a class="dropdown-item text-secondary" style="cursor: pointer;"
+              onclick="desocupar(this, '${habitacion_id}')">
+              Liberar
+          </a>
+        </li>
+      `);
+      const rentaInfo = `
+        <button class="btn btn-outline-primary btn-sm mb-3" type="button" data-bs-toggle="collapse"
+          data-bs-target="#rentaInfo${habitacion_id}" aria-expanded="false"
+          aria-controls="rentaInfo${habitacion_id}">
+          Ver Detalles de Renta
+        </button>
+        <div class="collapse" id="rentaInfo${habitacion_id}">
+          <div class="bg-light p-3 rounded border">
+            <p><strong>Tipo:</strong> <span class="text-primary">${
+              data.tipo === 1 ? "Por Horas" : "Por Noche"
+            }</span></p>
+            <p><strong>Tipo:</strong> Por Horas </p>
+            <p><strong>Inicio:</strong> ${data.fechaInicio}</p>
+            <p><strong>Inicio:</strong> ${data.fechaFin}</p>
+            ${
+              data.tipo === 2
+                ? `
+                <p><strong>Tipo:</strong> Por Horas </p>
+              <p><strong>Huésped:</strong> ${data.nombreHuesped}</p>
+              <p><strong>Teléfono:</strong> ${data.telefonoHuesped}</p>
+              <p><strong>Noches:</strong> ${data.numNoches}</p>
+              <p><strong>Noches:</strong> ${data.fechaInicio}</p>`
+                : ""
+            }
+            <p><strong>Observaciones:</strong> ${
+              data.observaciones || "Ninguna"
+            }</p>
+          </div>
+        </div>`;
+      const existingRentaInfo = cardBody.querySelector(`#infoRenta`);
+      if (existingRentaInfo) {
+        existingRentaInfo.parentElement.outerHTML = rentaInfo;
+      } else {
+        cardBody.insertAdjacentHTML("beforeend", rentaInfo);
+      }
+      break;
+    case "reservada":
+      card.classList.add("border-warning", "text-warning");
+      estadoText.textContent = "Estado: Reservada";
+      break;
+    default:
+      estadoText.textContent = "Estado: Desconocido";
+      break;
+  }
+} */
+
+
+
+

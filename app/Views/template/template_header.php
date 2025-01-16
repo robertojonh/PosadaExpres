@@ -7,6 +7,7 @@
     <title>Menú Principal - Posada Express</title>
     <link href="<?= base_url() ?>/public/font-awesome/css/all.min.css" rel="stylesheet">
     <link href="<?= base_url() ?>/public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?= base_url() ?>/public/tabulator/css/tabulator.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.css" />
     <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
 </head>
@@ -31,11 +32,17 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="<?= base_url() ?>home">Menú
+                            <a class="nav-link <?= (url_is('home') !== false ? 'active' : '') ?> " aria-current="page"
+                                href="<?= base_url() ?>home">Menú
                                 Principal</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= base_url() ?>habitaciones">Habitaciones</a>
+                            <a class="nav-link <?= (url_is('habitaciones') !== false ? 'active' : '') ?>"
+                                href="<?= base_url() ?>habitaciones">Habitaciones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?= (url_is('rentas') !== false ? 'active' : '') ?>"
+                                href="<?= base_url() ?>rentas">Informe de Rentas</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"

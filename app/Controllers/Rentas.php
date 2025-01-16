@@ -8,13 +8,20 @@ use DateTime;
 class Rentas extends BaseController
 {
     private $model;
+    private $habitacionModel;
     public function __construct()
     {
         $this->model = model('RentasModel');
+        $this->habitacionModel = model('HabitacionModel');
     }
     public function index()
     {
-        //
+        return view('/rentas/rentas');
+    }
+
+    public function getRentas()
+    {
+        return $this->response->setJSON($this->model->getRentas());
     }
 
     public function rentarHabitacion()
@@ -47,7 +54,7 @@ class Rentas extends BaseController
         $estado = [
             'estado' => 'ocupada'
         ];
-        $this->model->actualizarEstado($data->habitacion_id, $estado);
+        $this->habitacionModel->actualizarEstado($data->habitacion_id, $estado);
         return $this->response->setJSON(['status' => 'success', 'data' => $rentar]);
     }
 }

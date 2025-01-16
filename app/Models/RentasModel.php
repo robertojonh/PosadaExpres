@@ -14,10 +14,8 @@ class RentasModel extends Model
         return $this->db->insertID();
     }
 
-    public function actualizarEstado($habitacion_id, $estado)
+    public function getRentas()
     {
-        $builder = $this->db->table('habitaciones')
-            ->where('habitacion_id', $habitacion_id)
-            ->update($estado);
+        return $this->db->query("SELECT r.*,h.num FROM rentas AS r LEFT JOIN habitaciones AS h ON h.habitacion_id = r.habitacion_id")->getResult();
     }
 }

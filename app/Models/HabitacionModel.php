@@ -50,6 +50,13 @@ WHERE h.estado != 'no_disponible';";
             ->update($data);
     }
 
+    public function actualizarEstado($habitacion_id, $estado)
+    {
+        return $this->db->table('habitaciones')
+            ->where('habitacion_id', $habitacion_id)
+            ->update($estado);
+    }
+
     public function cambiarDisponibilidad($habitacion_id, $nuevo_estado)
     {
         return $this->db->table('habitaciones')

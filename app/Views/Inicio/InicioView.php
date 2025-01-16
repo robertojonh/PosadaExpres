@@ -69,7 +69,6 @@
 
             <div class="row row-cols-1 row-cols-md-4 g-3" style="padding-top: 2rem;" id="row">
                 <?php foreach ($habitaciones as $habitacion):
-                    /* print_r($habitacion); */
                     $estadoClase = '';
                     switch ($habitacion->estado) {
                         case 'libre':
@@ -94,29 +93,34 @@
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title text-center mb-3">Habitación Número: <?= $habitacion->num ?></h5>
                                 <p class="text-center fw-bold">Estado: <?= ucfirst($habitacion->estado) ?></p>
-                                <?php if ($habitacion->estado == "ocupada" && isset($habitacion->renta_id)): ?>
-                                    <button class="btn btn-outline-primary btn-sm mb-3" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#rentaInfo<?= $habitacion->habitacion_id ?>" aria-expanded="false"
-                                        aria-controls="rentaInfo<?= $habitacion->habitacion_id ?>">
-                                        Ver Detalles de Renta
-                                    </button>
-                                    <div class="collapse" id="rentaInfo<?= $habitacion->habitacion_id ?>">
-                                        <div class="bg-light p-3 rounded border">
-                                            <?php if ($habitacion->tipo == 1): ?>
-                                                <p><strong>Tipo:</strong> <span class="text-primary">Por Horas</span></p>
-                                                <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?></p>
-                                                <p><strong>Fin:</strong> <?= formato_fecha($habitacion->fecha_fin, 10) ?></p>
-                                            <?php elseif ($habitacion->tipo == 2): ?>
-                                                <p><strong>Tipo:</strong> <span class="text-primary">Por Noche</span></p>
-                                                <p><strong>Huésped:</strong> <?= $habitacion->nombre_huesped ?></p>
-                                                <p><strong>Teléfono:</strong> <?= $habitacion->num_telefono ?></p>
-                                                <p><strong>Noches:</strong> <?= $habitacion->num_noches ?></p>
-                                                <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?></p>
-                                            <?php endif; ?>
-                                            <p><strong>Observaciones:</strong> <?= $habitacion->observaciones ?></p>
+                                <div class="infoRenta" id="infoRenta">
+                                    <?php if ($habitacion->estado == "ocupada" && isset($habitacion->renta_id)): ?>
+                                        <button class="btn btn-outline-primary btn-sm mb-3" type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#rentaInfo<?= $habitacion->habitacion_id ?>" aria-expanded="false"
+                                            aria-controls="rentaInfo<?= $habitacion->habitacion_id ?>">
+                                            Ver Detalles de Renta
+                                        </button>
+                                        <div class="collapse" id="rentaInfo<?= $habitacion->habitacion_id ?>">
+                                            <div class="bg-light p-3 rounded border">
+                                                <?php if ($habitacion->tipo == 1): ?>
+                                                    <p><strong>Tipo:</strong> <span class="text-primary">Por Horas</span></p>
+                                                    <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?>
+                                                    </p>
+                                                    <p><strong>Fin:</strong> <?= formato_fecha($habitacion->fecha_fin, 10) ?></p>
+                                                <?php elseif ($habitacion->tipo == 2): ?>
+                                                    <p><strong>Tipo:</strong> <span class="text-primary">Por Noche</span></p>
+                                                    <p><strong>Huésped:</strong> <?= $habitacion->nombre_huesped ?></p>
+                                                    <p><strong>Teléfono:</strong> <?= $habitacion->num_telefono ?></p>
+                                                    <p><strong>Noches:</strong> <?= $habitacion->num_noches ?></p>
+                                                    <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?>
+                                                    </p>
+                                                <?php endif; ?>
+                                                <p><strong>Observaciones:</strong> <?= $habitacion->observaciones ?></p>
+                                            </div>
                                         </div>
-                                    </div>
-                                <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
                                 <div class="d-flex justify-content-center align-items-center my-3">
                                     <?php for ($i = 1; $i <= $habitacion->num_camas; $i++): ?>
                                         <i class="fas fa-2x fa-solid fa-bed me-2"></i>
@@ -276,205 +280,4 @@
 </div>
 
 <?= view('/template/template_footer') ?>
-<script>
-    function actualizarTablaEstados() {
-        let totalHabitaciones = 0;
-        let totalOcupadas = 0;
-        let totalLibres = 0;
-        let totalReservadas = 0;
-        const tarjetas = document.querySelectorAll('#row .card');
-        tarjetas.forEach((tarjeta) => {
-            totalHabitaciones++;
-            if (tarjeta.classList.contains('border-success')) {
-                totalLibres++;
-            } else if (tarjeta.classList.contains('border-danger')) {
-                totalOcupadas++;
-            } else if (tarjeta.classList.contains('border-warning')) {
-                totalReservadas++;
-            }
-        });
-        document.getElementById('totalHabitaciones').textContent = totalHabitaciones;
-        document.getElementById('totalOcupadas').textContent = totalOcupadas;
-        document.getElementById('totalLibres').textContent = totalLibres;
-        document.getElementById('totalReservadas').textContent = totalReservadas;
-    }
-
-    document.addEventListener('DOMContentLoaded', actualizarTablaEstados);
-
-    function rentar(element, habitacion_id) {
-        const guardarRentaBtn = document.getElementById('guardarRenta');
-        guardarRentaBtn.onclick = () => guardarRenta(habitacion_id, element);
-        const precioHabitacionTexto = element.closest('.card').querySelector('.precio-habitacion').textContent;
-        const precioHabitacion = parseFloat(precioHabitacionTexto.replace('Precio por Noche: $', '').replace(',', '').trim());
-        document.getElementById('precioHabitacionModal').value = precioHabitacion;
-        const numHabitacion = element.closest('.card').querySelector('.card-title').textContent.split(': ')[1];
-        document.getElementById('numHabitacion').textContent = numHabitacion;
-        const modal = new bootstrap.Modal(document.getElementById('modalRentar'));
-        modal.show();
-        document.getElementById('tipoRenta').value = 'horas';
-        cambiarTipoRenta();
-    }
-
-    function cambiarTipoRenta() {
-        const tipoRenta = document.getElementById('tipoRenta').value;
-        const informacionHuesped = document.getElementById('informacionHuesped');
-        const fechaFinContainer = document.getElementById('fechaFinContainer');
-        if (tipoRenta === 'noche') {
-            informacionHuesped.classList.remove('d-none');
-            fechaFinContainer.classList.add('d-none');
-            document.getElementById('numNoches').addEventListener('input', calcularTotal);
-        } else {
-            informacionHuesped.classList.add('d-none');
-            fechaFinContainer.classList.remove('d-none');
-            document.getElementById('fechaFinContainer').addEventListener('change', calcularTotal);
-        }
-    }
-
-    function calcularTotal() {
-        const tipoRenta = document.getElementById('tipoRenta').value;
-        const numNoches = parseInt(document.getElementById('numNoches').value || 0, 10);
-        const fechaInicio = document.getElementById('fechaInicio').value;
-        const fechaFin = document.getElementById('fechaFin').value;
-
-        var precioHabitacion = document.getElementById('precioHabitacionModal').value;
-        let total = 0;
-
-        if (tipoRenta === 'noche' && numNoches > 0) {
-            total = precioHabitacion * numNoches;
-        } else if (tipoRenta === 'horas' && fechaInicio && fechaFin) {
-            const precioPorHora = 70;
-            const horas = (new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60);
-            total = precioPorHora * Math.ceil(horas);
-        }
-        document.getElementById('total').value = `$${total.toFixed(2)}`;
-    }
-
-    function guardarRenta(habitacion_id, elemento) {
-
-        const tipoRenta = document.getElementById('tipoRenta').value;
-        const numHabitacion = document.getElementById('numHabitacion').textContent;
-        const nombreHuesped = document.getElementById('nombreHuesped').value || null;
-        const correoHuesped = document.getElementById('correoHuesped').value || null;
-        const telefonoHuesped = document.getElementById('telefonoHuesped').value || null;
-        const numNoches = document.getElementById('numNoches').value || null;
-        const fechaInicio = document.getElementById('fechaInicio').value;
-        const fechaFin = document.getElementById('fechaFin').value || null;
-        const observaciones = document.getElementById('observaciones').value;
-        const total = parseFloat(document.getElementById('total').value.replace('$', ''));
-
-        if (!fechaInicio || (!fechaFin && tipoRenta === 'horas')) {
-            alert('Por favor, complete todos los campos requeridos.');
-            return;
-        }
-        const renta = {
-            habitacion_id,
-            tipoRenta,
-            numHabitacion,
-            nombreHuesped,
-            correoHuesped,
-            telefonoHuesped,
-            numNoches,
-            fechaInicio,
-            fechaFin,
-            observaciones,
-            total,
-        };
-
-        $.ajax({
-            url: base_url + "rentas/rentarHabitacion",
-            type: "POST",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify({ data: renta }),
-            success: function (response) {
-                if (response.status === "success") {
-                    var estado = "ocupada";
-                    cambiarEstadoHabitacion(elemento, estado, habitacion_id);
-                    actualizarTablaEstados();
-                    $('#modalRentar').modal('hide');
-                } else {
-                }
-            },
-            error: function (error) {
-            },
-        });
-    }
-
-    function desocupar(elemento, habtitacion_id) {
-        var estado = 'libre';
-        $.ajax({
-            url: base_url + "habitaciones/cambiarDisponibilidad",
-            type: "POST",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify({
-                habitacion_id: habtitacion_id,
-                estado: estado
-            }),
-            success: function (response) {
-                if (response.status === "success") {
-
-                    cambiarEstadoHabitacion(elemento, estado, habtitacion_id);
-                    actualizarTablaEstados();
-                    $('#modalRentar').modal('hide');
-                } else {
-                }
-            },
-            error: function (error) {
-            },
-        });
-    }
-
-    function cambiarEstadoHabitacion(elemento, estado, habitacion_id) {
-        const card = elemento.closest(".card");
-        card.classList.remove(
-            "border-success",
-            "text-success",
-            "border-danger",
-            "text-danger",
-            "border-warning",
-            "text-warning"
-        );
-        const estadoText = card.querySelector("p");
-        const dropdownMenu = $(elemento).closest('.dropdown').find('.dropdown-menu');
-        switch (estado) {
-            case "libre":
-                card.classList.add("border-success", "text-success");
-                estadoText.textContent = "Estado: Libre";
-                dropdownMenu.html(`<li>
-                <a class="dropdown-item text-secondary" style="cursor: pointer;"
-                    onclick="rentar(this, '${habitacion_id}')">
-                    Rentar
-                </a>
-                <a class="dropdown-item text-secondary" style="cursor: pointer;"
-                    onclick="reservar(this, '${habitacion_id}')">
-                    Reservar
-                </a>
-            </li>`);
-                break;
-            case "no_disponible":
-                card.classList.add("border-secondary", "text-secondary");
-                estadoText.textContent = "Estado: No Disponible";
-                break;
-            case "ocupada":
-                card.classList.add("border-danger", "text-danger");
-                estadoText.textContent = "Estado: Ocupada";
-                dropdownMenu.html(`<li>
-                <a class="dropdown-item text-secondary" style="cursor: pointer;"
-                    onclick="desocupar(this, '${habitacion_id}')">
-                    Liberar
-                </a>
-            </li>`);
-                break;
-            case "reservada":
-                card.classList.add("border-warning", "text-warning");
-                estadoText.textContent = "Estado: Reservada";
-                break;
-            default:
-                estadoText.textContent = "Estado: Desconocido";
-                break;
-        }
-    }
-
-</script>
 <script src="<?= base_url() ?>/public/js/inicio.js"></script>
