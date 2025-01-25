@@ -44,6 +44,10 @@
                             <a class="nav-link <?= (url_is('rentas') !== false ? 'active' : '') ?>"
                                 href="<?= base_url() ?>rentas">Informe de Rentas</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?= (url_is('reservaciones') !== false ? 'active' : '') ?>"
+                                href="<?= base_url() ?>reservaciones">Informe de Reservaciones</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">

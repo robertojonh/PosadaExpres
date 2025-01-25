@@ -252,3 +252,96 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
       break;
   }
 }
+
+function reservar(element, habitacion_id) {
+  const guardarReservacionBtn = document.getElementById("guardarReservacion");
+  guardarReservacionBtn.onclick = () =>
+    guardarReservacion(habitacion_id, element);
+  const precioHabitacionTexto = element
+    .closest(".card")
+    .querySelector(".precio-habitacion").textContent;
+  const precioHabitacion = parseFloat(
+    precioHabitacionTexto
+      .replace("Precio por Noche: $", "")
+      .replace(",", "")
+      .trim()
+  );
+  document.getElementById("precioHabitacionR").value = precioHabitacion;
+  const numHabitacion = element
+    .closest(".card")
+    .querySelector(".card-title")
+    .textContent.split(": ")[1];
+  document.getElementById("numHabitacionR").textContent = numHabitacion;
+  calcularTotalReservacion();
+  const modal = new bootstrap.Modal(
+    document.getElementById("modalReservacion")
+  );
+  modal.show();
+}
+
+document
+  .getElementById("numNochesR")
+  .addEventListener("input", calcularTotalReservacion);
+
+function calcularTotalReservacion() {
+  var precioHabitacion = document.getElementById("precioHabitacionR").value;
+  let total = 0;
+  const numNoches = parseInt(
+    document.getElementById("numNochesR").value || 0,
+    10
+  );
+  total = precioHabitacion * numNoches;
+  document.getElementById("totalReservacionR").innerHTML = `$${total.toFixed(
+    2
+  )}`;
+}
+
+function guardarReservacion(habitacion_id, elemento) {
+  const numHabitacion = document.getElementById("numHabitacionR").textContent;
+  const nombreHuesped = document.getElementById("nombreHuespedR").value || null;
+  const correoHuesped = document.getElementById("correoHuespedR").value || null;
+  const telefonoHuesped =
+    document.getElementById("telefonoHuespedR").value || null;
+  const numNoches = document.getElementById("numNochesR").value || null;
+  const fechaInicio = document.getElementById("fechaInicioR").value;
+  const fechaFin = document.getElementById("fechaFinR").value || null;
+  const observaciones = document.getElementById("observacionesR").value;
+  const total = parseFloat(
+    document.getElementById("totalReservacionR").textContent.replace("$", "")
+  );
+
+  if (!fechaInicio || (!fechaFin && tipoRenta === "horas")) {
+    alert("Por favor, complete todos los campos requeridos.");
+    return;
+  }
+  const renta = {
+    habitacion_id,
+    numHabitacion,
+    nombreHuesped,
+    correoHuesped,
+    telefonoHuesped,
+    numNoches,
+    fechaInicio,
+    fechaFin,
+    observaciones,
+    total,
+  };
+  return console.log(renta);
+  $.ajax({
+    url: base_url + "reservaciones/reservar",
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json",
+    data: JSON.stringify({ data: renta }),
+    success: function (response) {
+      if (response.status === "success") {
+        var estado = "reservada";
+        cambiarEstadoHabitacion(elemento, estado, habitacion_id, renta);
+        actualizarTablaEstados();
+        $("#modalReservacion").modal("hide");
+      } else {
+      }
+    },
+    error: function (error) {},
+  });
+}

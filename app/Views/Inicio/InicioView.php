@@ -246,34 +246,63 @@
 
 
 <div class="modal modal-xl fade" id="modalReservacion" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-    role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">Reservacion</h5>
+                <h5 class="modal-title" id="modalTitleId">Reservación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label for="numeroHabitacion" class="form-label">Número de habitación</label>
-                    <input type="number" class="form-control" id="numeroHabitacion" placeholder="Ejemplo: 21">
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Número de Habitación</label>
+                    <p id="numHabitacionR" class="display-6 fw-bold text-primary">101</p>
                 </div>
-                <div class="mb-3">
-                    <label for="numeroCamas" class="form-label">Número de Camas</label>
-                    <input type="number" class="form-control" id="numeroCamas" placeholder="Ejemplo: 2">
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Precio Total</label>
+                    <p id="totalReservacionR" class="display-5 fw-bold text-success">$150.00</p>
                 </div>
-                <div class="mb-3">
-                    <label for="precioNoche" class="form-label">Precio por Noche</label>
-                    <input type="text" class="form-control" id="precioNoche" placeholder="Ejemplo: 1500.00">
+                <input type="text" id="precioHabitacionR" hidden>
+                <div id="informacionHuesped">
+                    <h6 class="fw-bold text-uppercase text-secondary border-bottom pb-2 mb-3">Información del Huésped
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="nombreHuespedR" class="form-label">Nombre del huésped</label>
+                            <input type="text" class="form-control" id="nombreHuespedR" placeholder="Juan Pérez">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefonoHuespedR" class="form-label">Teléfono de contacto</label>
+                            <input type="text" class="form-control" id="telefonoHuespedR" placeholder="555-555-5555">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="correoHuespedR" class="form-label">Correo</label>
+                            <input type="email" class="form-control" id="correoHuespedR" placeholder="email@ejemplo.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="numNochesR" class="form-label">Noches</label>
+                            <input type="number" class="form-control" id="numNochesR" value="1" placeholder="2" min="1">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fechaInicioR" class="form-label">Fecha de Entrada</label>
+                            <input type="date" class="form-control" id="fechaInicioR">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fechaFinR" class="form-label">Fecha de Salida</label>
+                            <input type="date" class="form-control" id="fechaFinR">
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="observaciones" class="form-label">Observacion</label>
-                    <input type="text" class="form-control" id="observaciones"
-                        placeholder="Habitacion de solo reservacion">
+                <div class="mt-4">
+                    <label for="observacionesR" class="form-label">Observaciones</label>
+                    <textarea class="form-control" id="observacionesR" rows="3"
+                        placeholder="Habitación de solo reservación"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="guardarHabitacion()">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="guardarReservacion"
+                    onclick="guardarReservacion()">Guardar</button>
             </div>
         </div>
     </div>
