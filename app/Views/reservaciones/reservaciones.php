@@ -6,7 +6,7 @@
             <div class="text-center mb-3">
                 <h3>Lista de las Reservaciones</h3>
             </div>
-            <div id="rentas_tabulator"></div>
+            <div id="reservaciones_tabulator"></div>
         </div>
     </div>
 </div>

@@ -32,6 +32,7 @@ class Rentas extends BaseController
         $dateTimeFin = new DateTime($data->fechaFin);
         $formatoInicio = $dateTimeInicio->format('Y-m-d H:i:s');
         $formatoFin = $dateTimeFin->format('Y-m-d H:i:s');
+        $infoReservacion = isset($data->reservacion_id) ? $data->reservacion_id : null; 
         $rentar = [
             'habitacion_id' => $data->habitacion_id,
             'tipo' => 1,
@@ -42,19 +43,17 @@ class Rentas extends BaseController
             'fecha' => date('Y-m-d H:i:s'),
         ];
         if ($data->tipoRenta == "horas") {
-            $this->model->rentar($rentar);
         } else {
+            $dateTimeFin->setTime(12, 0, 0);
+            $formatoFin = $dateTimeFin->format('Y-m-d H:i:s');
             $rentar['tipo'] = 2;
+            $rentar['fecha_fin'] = $formatoFin;
             $rentar['nombre_huesped'] = $data->nombreHuesped;
             $rentar['num_telefono'] = $data->telefonoHuesped;
             $rentar['correo_e'] = $data->correoHuesped;
             $rentar['num_noches'] = $data->numNoches;
-            $this->model->rentar($rentar);
         }
-        $estado = [
-            'estado' => 'ocupada'
-        ];
-        $this->habitacionModel->actualizarEstado($data->habitacion_id, $estado);
+        $rentar['renta_id'] = $this->model->rentar($rentar);
         return $this->response->setJSON(['status' => 'success', 'data' => $rentar]);
     }
 }

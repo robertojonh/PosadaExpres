@@ -10,6 +10,8 @@
     <link href="<?= base_url() ?>/public/tabulator/css/tabulator.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.css" />
     <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
+    <script src="<?= base_url() ?>/public/js/notificacion.js"></script>
+    <script src="<?= base_url() ?>/public/js/utilities.js"></script>
 </head>
 
 <body>

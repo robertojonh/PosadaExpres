@@ -37,4 +37,6 @@ $routes->post('rentas/getRentas', 'Rentas::getRentas');
 
 /* Reservaciones */
 $routes->get('/reservaciones', 'Reservaciones::index');
-$routes->get('/reservaciones/reservar', 'Reservaciones::guardarReservacion');
+$routes->post('reservaciones/getReservaciones', 'Reservaciones::getReservaciones');
+$routes->post('/reservaciones/reservar', 'Reservaciones::guardarReservacion');
+$routes->post('/reservaciones/cancelacion', 'Reservaciones::cancelar');
