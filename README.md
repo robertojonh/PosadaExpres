@@ -1,67 +1,45 @@
-# CodeIgniter 4 Application Starter
 
-## What is CodeIgniter?
+# POSADA EXPRESS
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+POSADA EXPRESS es un sistema web desarrollado para gestionar de forma eficiente la información de un hotel (posada), optimizando el control de reservaciones, rentas y la disponibilidad de habitaciones.
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+✨ Características principales
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+📆 Gestión de reservaciones y rentas en tiempo real.
 
-The user guide corresponding to the latest version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
+🟢 Visualización del estado de cada habitación (libre, rentada o reservada) mediante indicadores visuales intuitivos.
 
-## Installation & updates
+📊 Generación de reportes en formatos XLSX y PDF, útiles para llevar un control contable de las habitaciones.
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+🔄 Actualización automática de estados cuando se aproxima la fecha de una reservación, mostrando un recordatorio visual.
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+🔐 Bloqueo de habitaciones en tiempo real: cuando un usuario interactúa con una habitación, esta se bloquea temporalmente para evitar conflictos con otros usuarios (prevención de dobles reservas o rentas).
 
-## Setup
+👥 Multiusuario: múltiples usuarios pueden realizar operaciones simultáneamente sin afectar la integridad del sistema.
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+## Preguntas Frecuentes
 
-## Important Change with index.php
+#### ¿El sistema web cuenta con roles de usuarios?
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+Sí, el sistema cuenta con roles de usuario, lo que permite establecer una jerarquía de permisos. Cada rol tiene acceso a funciones específicas del sistema, separando claramente las actividades administrativas, operativas y de visualización.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+#### ¿Puedo generar reportes personalizados?
 
-**Please** read the user guide for a better explanation of how CI4 works!
+Sí, el sistema permite generar reportes en formatos XLSX y PDF, adaptados a diferentes necesidades contables o de control interno.
 
-## Repository Management
+#### ¿El sistema es multiusuario en tiempo real?
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+Así es. POSADA EXPRESS permite que varios usuarios trabajen de forma simultánea, bloqueando temporalmente habitaciones en uso para evitar conflictos o duplicidad de acciones.
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+#### ¿Requiere instalación en servidores específicos?
 
-## Server Requirements
 
-PHP version 7.4 or higher is required, with the following extensions installed:
+## Autores
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+- [@robertojonh](https://github.com/robertojonh)
 
-> **Warning**
-> The end of life date for PHP 7.4 was November 28, 2022. If you are
-> still using PHP 7.4, you should upgrade immediately. The end of life date
-> for PHP 8.0 will be November 26, 2023.
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+## Retroalimentación
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Si tienes alguna Retroalimentación puede realizarla al siguiente correo 17161256@itoaxaca.edu.mx
+
