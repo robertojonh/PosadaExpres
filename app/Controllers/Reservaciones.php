@@ -36,6 +36,7 @@ class Reservaciones extends BaseController
                 'fecha' => date('Y-m-d H:i:s'),
             ];
         $reservacion_id = $this->model->guardarReservacion($data);
+        $this->model->actualizarReservaciones();
         return $this->response->setJSON(['status' => 'success', 'habitacion_id' => $reservacion->habitacion_id, 'reservacion_id' => $reservacion_id]);
     }
 
@@ -55,5 +56,11 @@ class Reservaciones extends BaseController
     function getReservaciones()
     {
         return $this->response->setJSON($this->model->getReservaciones());
+    }
+
+    function getInfo()
+    {
+        $datosJson = $this->request->getJSON();
+        return $this->response->setJSON(['status' => 'success', 'info' => $this->model->getInfo($datosJson->reservacion_id)]);
     }
 }

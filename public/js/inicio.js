@@ -142,16 +142,22 @@ function guardarRenta(habitacion_id, elemento) {
     contentType: "application/json",
     data: JSON.stringify({ data: renta }),
     success: function (response) {
-      if (response.status === "success") {
-        var estado = "ocupada";
-        data_response = response.data;
-        renta.renta_id = data_response.renta_id;
-        cambiarEstadoHabitacion(elemento, estado, habitacion_id, renta);
-        actualizarTablaEstados();
-        $("#modalRentar").modal("hide");
-        generalNotify('personalizada', 'success', 'Se ha rentado', 'La habitación ha sido rentada correctamente');
-      } else {
-        generalNotify('general-error');
+      switch (response.status) {
+        case 'success':
+          var estado = "ocupada";
+          data_response = response.data;
+          renta.renta_id = data_response.renta_id;
+          cambiarEstadoHabitacion(elemento, estado, habitacion_id, renta);
+          actualizarTablaEstados();
+          $("#modalRentar").modal("hide");
+          generalNotify('personalizada', 'success', 'Se ha rentado', 'La habitación ha sido rentada correctamente');
+          break;
+        case 'no_guardado':
+          generalNotify('personalizada', 'warning', 'Fechas cruzadas', 'La renta se se ha cruzado con las fechas de la reservación, compruebas las fechas e intentalo mas tarde');
+          break;
+        default:
+          generalNotify('error-general');
+          break;
       }
     },
     error: function (error) { },
@@ -216,7 +222,8 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
               Reservar
           </a>
         </li>`);
-      rentaInfoContainer.innerHTML = "";
+      const rentaInfoContainer2 = card.querySelector(".infoReservacion");
+      rentaInfoContainer2.innerHTML = "";
       break;
     case "no_disponible":
       card.classList.add("border-secondary", "text-secondary");
@@ -234,6 +241,7 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
             </a>
           </li>
         `);
+      //Cambiar el formato de las fechas para mostrar la informacion correctamente
       const rentaInfo = `
           <button class="btn btn-outline-primary btn-sm mb-3" type="button" data-bs-toggle="collapse"
             data-bs-target="#rentaInfo${habitacion_id}" aria-expanded="false"
@@ -242,20 +250,12 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
           </button>
           <div class="collapse" id="rentaInfo${habitacion_id}">
             <div class="bg-light p-3 rounded border">
-              <p><strong>Tipo:</strong> <span class="text-primary">${data.tipoRenta === 1 ? "Por Horas" : "Por Noche"
-        }</span></p>
-
-              ${data.tipoRenta === 1
-          ? `
-                  <p><strong>Fin:</strong> ${data.fechaInicio}</p>
-                  `
-          : `
+              <p><strong>Tipo:</strong> <span class="text-primary">${data.tipoRenta === 1 ? "Por Horas" : "Por Noche"}</span></p>
+              ${data.tipoRenta === 1 ? `<p><strong>Fin:</strong> ${data.fechaInicio}</p>` : `
                    <p><strong>Huésped:</strong> ${data.nombreHuesped}</p>
                   <p><strong>Teléfono:</strong> ${data.telefonoHuesped}</p>
                   <p><strong>Noches:</strong> ${data.numNoches}</p>
-                  <p><strong>Fin:</strong> ${data.fechaInicio}</p>
-                  `
-        }
+                  <p><strong>Fin:</strong> ${data.fechaInicio}</p>`}
               <p><strong>Observaciones:</strong> ${data.observaciones || "Ninguna"
         }</p>
             </div>
@@ -263,40 +263,51 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
       rentaInfoContainer.innerHTML = rentaInfo;
       break;
     case "reservada":
-      card.classList.add("border-warning", "text-warning");
-      estadoText.textContent = "Estado: Reservada";
-      dropdownMenu.html(`
-        <li>
-          <a class="dropdown-item text-secondary" style="cursor: pointer;"
-              onclick="cancelarReservacion(this, '${habitacion_id}','reservaciones','${data.reservacion_id}')">
-              Liberar
-          </a>
-        </li>
-      `);
+      if (data.fechaInicio === hoy) {
+        card.classList.add("border-primary", "text-primary");
+        estadoText.textContent = "Estado: Esperando huesped";
+        dropdownMenu.html(`
+      <li>
+        <a class="dropdown-item text-secondary" style="cursor: pointer;"
+            onclick="continuarReservacion(this, '${habitacion_id}','${habitacion_id}','${data.reservacion_id}')">
+            Continuar con la reservación
+        </a>
+        <a class="dropdown-item text-secondary" style="cursor: pointer;"
+            onclick="cancelarReservacion(this, '${habitacion_id}','reservaciones','${data.reservacion_id}')">
+            Cancelar
+        </a>
+      </li>
+    `);
+      } else {
+        card.classList.add("border-warning", "text-warning");
+        estadoText.textContent = "Estado: Reservada";
+        dropdownMenu.html(`
+      <li>
+        <a class="dropdown-item text-secondary" style="cursor: pointer;"
+            onclick="rentarReservacion(this, '${habitacion_id}','${habitacion_id}','${data.reservacion_id}')">
+            Rentar con reservación
+        </a>
+        <a class="dropdown-item text-secondary" style="cursor: pointer;"
+            onclick="cancelarReservacion(this, '${habitacion_id}','reservaciones','${data.reservacion_id}')">
+            Cancelar
+        </a>
+      </li>`);
+      }
+
       const reservacionInfo = `
           <button class="btn btn-outline-primary btn-sm mb-3" type="button" data-bs-toggle="collapse"
             data-bs-target="#rentaInfo${habitacion_id}" aria-expanded="false"
             aria-controls="rentaInfo${habitacion_id}">
-            Ver Detalles de Renta
+            Ver Detalles de la Reservación
           </button>
           <div class="collapse" id="rentaInfo${habitacion_id}">
             <div class="bg-light p-3 rounded border">
-              <p><strong>Tipo:</strong> <span class="text-primary">${data.tipoRenta === 1 ? "Por Horas" : "Por Noche"
-        }</span></p>
-
-              ${data.tipoRenta === 1
-          ? `
-                  <p><strong>Fin:</strong> ${data.fechaInicio}</p>
-                  `
-          : `
-                   <p><strong>Huésped:</strong> ${data.nombreHuesped}</p>
+                  <p><strong>Huésped:</strong> ${data.nombreHuesped}</p>
                   <p><strong>Teléfono:</strong> ${data.telefonoHuesped}</p>
                   <p><strong>Noches:</strong> ${data.numNoches}</p>
-                  <p><strong>Fin:</strong> ${data.fechaInicio}</p>
-                  `
-        }
-              <p><strong>Observaciones:</strong> ${data.observaciones || "Ninguna"
-        }</p>
+                  <P><strong>Inicio:</strong>${formatoFechaJS(data.fechaFin, 3)}</p>
+                  <p><strong>Fin:</strong> ${formatoFechaJS(data.fechaInicio, 3)}</p>
+              <p><strong>Observaciones:</strong> ${data.observaciones || "Ninguna"}</p>
             </div>
           </div>`;
       rentaInfoContainer.innerHTML = reservacionInfo;
@@ -452,7 +463,6 @@ $(document).on("click", "#confirmarCancelacion", function () {
   });
 });
 
-
 function rentarReservacion(element, habitacion_id, reservacion_id) {
   const guardarRentaBtn = document.getElementById("guardarRenta");
   guardarRentaBtn.onclick = () => guardarRentaReservacion(habitacion_id, element, reservacion_id);
@@ -510,9 +520,7 @@ function guardarRentaReservacion(habitacion_id, elemento, reservacion_id) {
     total,
     reservacion_id
   };
-
   console.log(renta);
-
   $.ajax({
     url: base_url + "rentas/rentarHabitacion",
     type: "POST",
@@ -520,16 +528,130 @@ function guardarRentaReservacion(habitacion_id, elemento, reservacion_id) {
     contentType: "application/json",
     data: JSON.stringify({ data: renta }),
     success: function (response) {
+      switch (response.status) {
+        case 'success':
+          var estado = "ocupada";
+          data_response = response.data;
+          renta.renta_id = data_response.renta_id;
+          cambiarEstadoHabitacion(elemento, estado, habitacion_id, renta);
+          actualizarTablaEstados();
+          $("#modalRentar").modal("hide");
+          generalNotify('personalizada', 'success', 'Se ha rentado', 'La habitación ha sido rentada correctamente');
+          break;
+        case 'no_guardado':
+          generalNotify('personalizada', 'warning', 'Fechas cruzadas', 'La renta se se ha cruzado con las fechas de la reservación, compruebas las fechas e intentalo mas tarde');
+          break;
+        default:
+          generalNotify('error-general');
+          break;
+      }
+    },
+    error: function (error) { },
+  });
+}
+
+/* onclick = "continuarReservacion(this, '<?= $habitacion->habitacion_id ?>','reservaciones','<?= $habitacion->reservacion_id ?>')" > */
+function continuarReservacion(elemento, habitacion_id, tipo, reservacion_id) {
+
+  $.ajax({
+    url: base_url + "reservaciones/getInfo",
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json",
+    data: JSON.stringify({ reservacion_id: reservacion_id }),
+    success: function (response) {
       if (response.status === "success") {
-        var estado = "ocupada";
-        data_response = response.data;
-        renta.renta_id = data_response.renta_id;
-        cambiarEstadoHabitacion(elemento, estado, habitacion_id, renta);
-        actualizarTablaEstados();
-        $("#modalRentar").modal("hide");
-        generalNotify('personalizada', 'success', 'Se ha rentado', 'La habitación ha sido rentada correctamente');
+        console.log(response.info);
+        $("#guardarRentaNoche")
+          .attr("data-habitacion", habitacion_id)
+          .attr("data-reservacion", reservacion_id)
+          .off("click")
+          .on("click", function () {
+            guardarRentaNoche(
+              elemento,
+              $(this).data("habitacion"),
+              $(this).data("reservacion")
+            );
+          });
+        continuarReservacionModal(response.info[0]);
       } else {
         generalNotify('general-error');
+      }
+    },
+    error: function (error) { },
+  });
+}
+
+function continuarReservacionModal(info) {
+  $("#nombreHuespedNoche").val(info.nombre_huesped);
+  $("#telefonoHuespedNoche").val(info.num_telefono);
+  $("#correoHuespedNoche").val(info.correo_e);
+  $("#numNochesNoche").val(parseInt(info.num_noches));
+  $("#observacionesNoche").val(info.observaciones);
+  $("#fechaInicioNoche").val(info.fecha_inicio.substring(0, 10));
+  $("#fechaFinNoche").val(info.fecha_fin.substring(0, 10));
+  $("#numHabitacionNoche").text(info.habitacion_numero);
+  $("#precioHabitacionNoche").val(info.precio_habitacion);
+  $("#totalRentaNoche").text(`$${parseFloat(info.precio_reservacion).toFixed(2)}`);
+  $("#modalRentaNoche").modal("show");
+}
+
+function guardarRentaNoche(elemento, habitacion_id, reservacion_id) {
+  const tipoRenta = "noches"
+  const numHabitacion = document.getElementById("numHabitacionNoche").textContent;
+  const nombreHuesped = document.getElementById("nombreHuespedNoche").value || null;
+  const correoHuesped = document.getElementById("correoHuespedNoche").value || null;
+  const telefonoHuesped =
+    document.getElementById("telefonoHuespedNoche").value || null;
+  const numNoches = document.getElementById("numNochesNoche").value || null;
+  const fechaInicio = document.getElementById("fechaInicioNoche").value;
+  const fechaFin = document.getElementById("fechaFinNoche").value || null;
+  const observaciones = document.getElementById("observacionesNoche").value;
+  const total = parseFloat(
+    document.getElementById("totalRentaNoche").textContent.replace("$", "").trim()
+  );
+
+  if (!fechaInicio || (!fechaFin && tipoRenta === "horas")) {
+    generalNotify('personalizada', 'warning', 'Campos necesarios', 'Es necesario completar todos los campos');
+    return;
+  }
+  const renta = {
+    habitacion_id,
+    tipoRenta,
+    numHabitacion,
+    nombreHuesped,
+    correoHuesped,
+    telefonoHuesped,
+    numNoches,
+    fechaInicio,
+    fechaFin,
+    observaciones,
+    total,
+    reservacion_id
+  };
+
+  $.ajax({
+    url: base_url + "rentas/continuarReservacion",
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json",
+    data: JSON.stringify({ data: renta }),
+    success: function (response) {
+      switch (response.status) {
+        case 'success':
+          var estado = "ocupada";
+          data_response = response.data;
+          console.log(data_response);
+          renta.renta_id = data_response.renta_id;
+          console.log(renta);
+          cambiarEstadoHabitacion(elemento, estado, habitacion_id, renta);
+          actualizarTablaEstados();
+          $("#modalRentaNoche").modal("hide");
+          generalNotify('personalizada', 'success', 'Se ha rentado', 'La habitación ha sido rentada correctamente');
+          break;
+        default:
+          generalNotify('error-general');
+          break;
       }
     },
     error: function (error) { },

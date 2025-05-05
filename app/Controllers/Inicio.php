@@ -16,8 +16,8 @@ class Inicio extends BaseController
     }
     public function index()
     {
-        $data['habitaciones'] = $this->habitacionModel->getHabitaciones(2);
         $this->reservacionModel->actualizarReservaciones();
+        $data['habitaciones'] = $this->habitacionModel->getHabitaciones(2);
         /* return $this->response->setJson(['datos' => $data]); */
         return view('Inicio/InicioView', $data);
     }

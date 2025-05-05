@@ -212,6 +212,7 @@
                                                     <p><strong>Teléfono:</strong> <?= $habitacion->num_telefono ?></p>
                                                     <p><strong>Noches:</strong> <?= $habitacion->num_noches ?></p>
                                                     <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?>
+                                                    <p><strong>Fin</strong> <?= formato_fecha($habitacion->fecha_fin, 10) ?></p>
                                                     </p>
                                                 <?php endif; ?>
                                                 <p><strong>Observaciones:</strong> <?= $habitacion->observaciones ?></p>
@@ -234,22 +235,9 @@
                                                 <p><strong>Teléfono:</strong> <?= $habitacion->telefono_reservacion ?></p>
                                                 <p><strong>Noches:</strong> <?= $habitacion->noches_reserva ?></p>
                                                 <p><strong>Inicio:</strong>
-                                                    <?= formato_fecha($habitacion->fecha_inicio_reserva, 10) ?>
+                                                    <?= formato_fecha($habitacion->fecha_inicio_reserva, 3) ?>
                                                 <p><strong>Fin:</strong>
-                                                    <?= formato_fecha($habitacion->fecha_fin_reserva, 10) ?>
-                                                    <?php if ($habitacion->tipo == 1): ?>
-                                                    <p><strong>Tipo:</strong> <span class="text-primary">Por Horas</span></p>
-                                                    <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?>
-                                                    </p>
-                                                    <p><strong>Fin:</strong> <?= formato_fecha($habitacion->fecha_fin, 10) ?></p>
-                                                <?php elseif ($habitacion->tipo == 2): ?>
-                                                    <p><strong>Tipo:</strong> <span class="text-primary">Por Noche</span></p>
-                                                    <p><strong>Huésped:</strong> <?= $habitacion->nombre_huesped ?></p>
-                                                    <p><strong>Teléfono:</strong> <?= $habitacion->num_telefono ?></p>
-                                                    <p><strong>Noches:</strong> <?= $habitacion->num_noches ?></p>
-                                                    <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?>
-                                                    </p>
-                                                <?php endif; ?>
+                                                    <?= formato_fecha($habitacion->fecha_fin_reserva, 3) ?>
                                                 <p><strong>Observaciones:</strong> <?= $habitacion->observacion_reserva ?></p>
                                             </div>
                                         </div>
@@ -494,5 +482,73 @@
     </div>
 </div>
 
+<div class="modal modal-xl fade" id="modalRentaNoche" tabindex="-1" aria-labelledby="modalRentaNocheLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRentaNocheLabel">Rentar Habitación por Noche</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Número de Habitación</label>
+                    <p id="numHabitacionNoche" class="display-6 fw-bold text-primary">101</p>
+                </div>
+
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Precio Total</label>
+                    <p id="totalRentaNoche" class="display-5 fw-bold text-success">$0.00</p>
+                </div>
+
+                <input type="text" id="precioHabitacionNoche" hidden>
+
+                <h6 class="fw-bold text-uppercase text-secondary border-bottom pb-2 mb-3">Información del Huésped</h6>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="nombreHuespedNoche" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreHuespedNoche" placeholder="Juan Pérez">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="telefonoHuespedNoche" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefonoHuespedNoche" placeholder="555-555-5555">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="correoHuespedNoche" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="correoHuespedNoche"
+                            placeholder="email@ejemplo.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="numNochesNoche" class="form-label">Noches</label>
+                        <input type="number" class="form-control" id="numNochesNoche" placeholder="1" min="1" value="1">
+                    </div>
+                </div>
+
+                <div class="row g-2 mt-3">
+                    <div class="col-md-6">
+                        <label for="fechaInicioNoche" class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="fechaInicioNoche">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="fechaFinNoche" class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="fechaFinNoche">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label for="observacionesNoche" class="form-label">Observaciones</label>
+                    <textarea class="form-control" id="observacionesNoche" rows="3"
+                        placeholder="Notas adicionales..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="guardarRentaNoche">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <?= view('/template/template_footer') ?>
+
 <script src="<?= base_url() ?>/public/js/inicio.js"></script>

@@ -110,5 +110,16 @@ var tableRentas = new Tabulator("#rentas_tabulator", {
       formatter: "textarea",
       headerFilter: true,
     },
+    {
+      title: "Fecha Liberación",
+      field: "fecha_liberacion",
+      hozAlign: "center",
+      width: 300,
+      headerFilter: true,
+      formatter: function (cell, formatterParams, onRendered) {
+        const rawDate = cell.getValue();
+        return rawDate ? formatoFechaJS(rawDate, 10) : "";
+      },
+    },
   ],
 });

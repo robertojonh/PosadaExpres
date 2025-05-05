@@ -7,7 +7,7 @@ function generalNotify(type, status = null, title = null, text = null) {
         showIcon: true,
         showCloseButton: false,
         autoclose: true,
-        autotimeout: 3000,
+        autotimeout: 5000,
         notificationsGap: null,
         notificationsPadding: null,
         type: "outline",

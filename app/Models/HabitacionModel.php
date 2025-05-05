@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use DateTime;
 
 class HabitacionModel extends Model
 {
@@ -121,9 +122,13 @@ class HabitacionModel extends Model
             ->update(['estado' => $nuevo_estado]);
 
         if ($tipo === 'rentas' && $tipo_id !== null) {
+            $date = new DateTime();
             $this->db->table('rentas')
                 ->where('renta_id', $tipo_id)
-                ->update(['estatus_renta' => 'inactiva']);
+                ->update([
+                    'estatus_renta' => 'inactiva',
+                    'fecha_liberacion' => $date->format('Y-m-d H:i:s')
+                ]);
         }
 
         if ($tipo === 'reservaciones' && $tipo_id !== null) {
