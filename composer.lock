@@ -341,6 +341,7 @@
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
             "time": "2025-01-19T18:31:34+00:00"
+<<<<<<< HEAD
         },
         {
             "name": "composer/pcre",
@@ -420,6 +421,8 @@
                 }
             ],
             "time": "2024-11-12T16:29:46+00:00"
+=======
+>>>>>>> reservaciones
         },
         {
             "name": "fig/http-message-util",
@@ -479,6 +482,7 @@
         },
         {
             "name": "firebase/php-jwt",
+<<<<<<< HEAD
             "version": "v6.11.1",
             "source": {
                 "type": "git",
@@ -489,6 +493,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/firebase/php-jwt/zipball/d1e91ecf8c598d073d0995afa8cd5c75c6e19e66",
                 "reference": "d1e91ecf8c598d073d0995afa8cd5c75c6e19e66",
+=======
+            "version": "v6.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/firebase/php-jwt.git",
+                "reference": "8f718f4dfc9c5d5f0c994cdfd103921b43592712"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/8f718f4dfc9c5d5f0c994cdfd103921b43592712",
+                "reference": "8f718f4dfc9c5d5f0c994cdfd103921b43592712",
+>>>>>>> reservaciones
                 "shasum": ""
             },
             "require": {
@@ -536,6 +552,7 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/firebase/php-jwt/tree/v6.11.1"
             },
             "time": "2025-04-09T20:32:01+00:00"
@@ -552,6 +569,24 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/d6389aae7c009daceaa8da9b7942d8df6969f6d9",
                 "reference": "d6389aae7c009daceaa8da9b7942d8df6969f6d9",
+=======
+                "source": "https://github.com/firebase/php-jwt/tree/v6.11.0"
+            },
+            "time": "2025-01-23T05:11:06+00:00"
+        },
+        {
+            "name": "google/auth",
+            "version": "v1.45.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/google-auth-library-php.git",
+                "reference": "86e9d937632a96b09dc40444c7cb68eb778a6ea6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/86e9d937632a96b09dc40444c7cb68eb778a6ea6",
+                "reference": "86e9d937632a96b09dc40444c7cb68eb778a6ea6",
+>>>>>>> reservaciones
                 "shasum": ""
             },
             "require": {
@@ -597,9 +632,15 @@
             "support": {
                 "docs": "https://cloud.google.com/php/docs/reference/auth/latest",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.47.0"
             },
             "time": "2025-04-15T21:47:20+00:00"
+=======
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.45.1"
+            },
+            "time": "2025-01-22T23:27:35+00:00"
+>>>>>>> reservaciones
         },
         {
             "name": "google/cloud-core",
@@ -1344,6 +1385,7 @@
         },
         {
             "name": "kreait/firebase-php",
+<<<<<<< HEAD
             "version": "7.18.0",
             "source": {
                 "type": "git",
@@ -1354,6 +1396,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/kreait/firebase-php/zipball/f43bc2509721ae2bff77f5232e5f56225440393b",
                 "reference": "f43bc2509721ae2bff77f5232e5f56225440393b",
+=======
+            "version": "7.16.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kreait/firebase-php.git",
+                "reference": "81c35806ce57eed86d5dc865f756974a23e0e6a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/81c35806ce57eed86d5dc865f756974a23e0e6a3",
+                "reference": "81c35806ce57eed86d5dc865f756974a23e0e6a3",
+>>>>>>> reservaciones
                 "shasum": ""
             },
             "require": {
@@ -1383,8 +1437,13 @@
                 "psr/log": "^1.1|^2.0|^3.0.2"
             },
             "require-dev": {
+<<<<<<< HEAD
                 "google/cloud-firestore": "^1.47.2",
                 "php-cs-fixer/shim": "^3.68.5",
+=======
+                "friendsofphp/php-cs-fixer": "^3.65.0",
+                "google/cloud-firestore": "^1.47.2",
+>>>>>>> reservaciones
                 "phpstan/extension-installer": "^1.4.3",
                 "phpstan/phpstan": "^2.0.4",
                 "phpstan/phpstan-deprecation-rules": "^2.0.1",
@@ -1439,7 +1498,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
             "time": "2025-03-08T22:54:18+00:00"
+=======
+            "time": "2025-01-20T10:10:11+00:00"
+>>>>>>> reservaciones
         },
         {
             "name": "kreait/firebase-tokens",

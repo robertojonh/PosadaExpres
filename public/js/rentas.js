@@ -41,44 +41,44 @@ var tableRentas = new Tabulator("#rentas_tabulator", {
       headerFilter: true,
     },
     {
-      title: "Numero de noches",
+      title: "Noches",
       field: "num_noches",
       hozAlign: "center",
-      width: 200,
+      width: 100,
       headerFilter: true,
     },
     {
       title: "Fecha de Entrada",
       field: "fecha_inicio",
       hozAlign: "center",
-      width: 200,
+      width: 300,
       headerFilter: true,
       formatter: function (cell, formatterParams, onRendered) {
         const rawDate = cell.getValue();
-        return formatDate(rawDate, 4);
+        return rawDate ? formatoFechaJS(rawDate, 10) : "";
       },
     },
     {
       title: "Fecha de Salida",
       field: "fecha_fin",
       hozAlign: "center",
-      width: 200,
+      width: 300,
       /* headerFilter: "datetime", */
       headerFilter: true,
       formatter: function (cell, formatterParams, onRendered) {
         const rawDate = cell.getValue();
-        return formatDate(rawDate, 4);
+        return rawDate ? formatoFechaJS(rawDate, 10) : "";
       },
     },
     {
       title: "Fecha de renta",
       field: "fecha",
       hozAlign: "center",
-      width: 200,
+      width: 300,
       headerFilter: true,
       formatter: function (cell, formatterParams, onRendered) {
         const rawDate = cell.getValue();
-        return formatDate(rawDate, 4);
+        return rawDate ? formatoFechaJS(rawDate, 10) : "";
       },
     },
     {
@@ -109,6 +109,17 @@ var tableRentas = new Tabulator("#rentas_tabulator", {
       field: "observaciones",
       formatter: "textarea",
       headerFilter: true,
+    },
+    {
+      title: "Fecha Liberación",
+      field: "fecha_liberacion",
+      hozAlign: "center",
+      width: 300,
+      headerFilter: true,
+      formatter: function (cell, formatterParams, onRendered) {
+        const rawDate = cell.getValue();
+        return rawDate ? formatoFechaJS(rawDate, 10) : "";
+      },
     },
   ],
 });

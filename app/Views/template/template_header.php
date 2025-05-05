@@ -10,6 +10,8 @@
     <link href="<?= base_url() ?>/public/tabulator/css/tabulator.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.css" />
     <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
+    <script src="<?= base_url() ?>/public/js/notificacion.js"></script>
+    <script src="<?= base_url() ?>/public/js/utilities.js"></script>
 </head>
 
 <body>
@@ -43,6 +45,10 @@
                         <li class="nav-item">
                             <a class="nav-link <?= (url_is('rentas') !== false ? 'active' : '') ?>"
                                 href="<?= base_url() ?>rentas">Informe de Rentas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?= (url_is('reservaciones') !== false ? 'active' : '') ?>"
+                                href="<?= base_url() ?>reservaciones">Informe de Reservaciones</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"

@@ -33,3 +33,12 @@ $routes->post('/habitaciones/getInfo', 'Habitacion::getHabitacion');
 $routes->get('rentas', 'Rentas::index');
 $routes->post('rentas/rentarHabitacion', 'Rentas::rentarHabitacion');
 $routes->post('rentas/getRentas', 'Rentas::getRentas');
+$routes->post('rentas/continuarReservacion', 'Rentas::continuarReservacion');
+
+
+/* Reservaciones */
+$routes->get('/reservaciones', 'Reservaciones::index');
+$routes->post('reservaciones/getReservaciones', 'Reservaciones::getReservaciones');
+$routes->post('/reservaciones/reservar', 'Reservaciones::guardarReservacion');
+$routes->post('/reservaciones/cancelacion', 'Reservaciones::cancelar');
+$routes->post('/reservaciones/getInfo', 'Reservaciones::getInfo');

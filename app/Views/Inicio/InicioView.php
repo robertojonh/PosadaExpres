@@ -21,13 +21,77 @@
 
     .table_status_docs th,
     .table_status_docs td {
-        padding: 8px;
+        padding: 12px;
         text-align: center;
-        border-bottom: 1px solid #000;
+        border-bottom: 2px solid #ddd;
     }
 
     .table_status_docs th {
         color: #fff;
+        font-weight: bold;
+    }
+
+    .table_status_docs td {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .table_status_docs th:nth-child(1) {
+        background-color: #6c757d;
+    }
+
+    .table_status_docs th:nth-child(3) {
+        background-color: #dc3545;
+    }
+
+    .table_status_docs th:nth-child(2) {
+        background-color: #198754;
+    }
+
+    .table_status_docs th:nth-child(4) {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .table_status_docs th:nth-child(5) {
+        background-color: #0d6efd;
+        color: #000;
+    }
+
+    .status-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .status-bar {
+        width: 50%;
+        height: 8px;
+        background: #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .status-bar div {
+        height: 100%;
+        transition: width 0.3s ease-in-out;
+    }
+
+    .bar-ocupadas {
+        background-color: #dc3545;
+    }
+
+    .bar-libres {
+        background-color: #198754;
+    }
+
+    .bar-reservadas {
+        background-color: #ffc107;
+    }
+
+    .bar-espera_huesped {
+        background-color: #0d6efd;
     }
 </style>
 <div class="col-12 mt-5" style="padding: 0.5rem;">
@@ -38,25 +102,50 @@
                     <table class="table table-bordered text-center table_status_docs">
                         <thead class="table-dark">
                             <tr>
-                                <th class="bg-success text-white">Total de habitaciones</th>
-                                <th class="bg-danger text-white">Ocupadas</th>
-                                <th class="bg-primary text-white">Libres</th>
-                                <th class="bg-warning text-dark">Reservadas</th>
+                                <th class="text-white">Total de habitaciones</th>
+                                <th class="text-white">Libres</th>
+                                <th class="text-white">Ocupadas</th>
+                                <th class="text-white">Reservadas</th>
+                                <th class="text-white">Esperando huesped</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>
-                                    <h6 id="totalHabitaciones"></h6>
+                                    <h6 id="totalHabitaciones">0</h6>
                                 </td>
                                 <td>
-                                    <h6 id="totalOcupadas"></h6>
+                                    <div class="status-container">
+                                        <span id="totalLibres">0</span>
+                                        <div class="status-bar">
+                                            <div id="barLibres" class="bar-libres" style="width: 0%;"></div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
-                                    <h6 id="totalLibres"></h6>
+                                    <div class="status-container">
+                                        <span id="totalOcupadas">0</span>
+                                        <div class="status-bar">
+                                            <div id="barOcupadas" class="bar-ocupadas" style="width: 0%;"></div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
-                                    <h6 id="totalReservadas"></h6>
+                                    <div class="status-container">
+                                        <span id="totalReservadas">0</span>
+                                        <div class="status-bar">
+                                            <div id="barReservadas" class="bar-reservadas" style="width: 0%;"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="status-container">
+                                        <span id="totalEsperaHuesped">0</span>
+                                        <div class="status-bar">
+                                            <div id="barEsperaHuesped" class="bar-espera_huesped" style="width: 0%;">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -66,25 +155,34 @@
             <div class="text-center">
                 <h3>Lista de habitaciones</h3>
             </div>
-
             <div class="row row-cols-1 row-cols-md-4 g-3" style="padding-top: 2rem;" id="row">
                 <?php foreach ($habitaciones as $habitacion):
                     $estadoClase = '';
+                    $estadoTexto = "";
                     switch ($habitacion->estado) {
                         case 'libre':
                             $estadoClase = 'border-success text-success';
+                            $estadoTexto = "Libre";
                             break;
                         case 'ocupada':
                             $estadoClase = 'border-danger text-danger';
+                            $estadoTexto = "Ocupada";
                             break;
                         case 'reservada':
                             $estadoClase = 'border-warning text-warning';
+                            $estadoTexto = "Reservada";
                             break;
                         case 'no_disponible':
                             $estadoClase = 'border-secondary text-secondary';
+                            $estadoTexto = "No disponible";
+                            break;
+                        case 'espera_h':
+                            $estadoClase = 'border-primary text-primary';
+                            $estadoTexto = "Esperando huesped";
                             break;
                         default:
                             $estadoClase = 'border-secondary text-secondary';
+                            $estadoTexto = "Pendiente";
                             break;
                     }
                     ?>
@@ -92,7 +190,7 @@
                         <div class="card shadow-sm h-100 <?= $estadoClase ?>" style="border-width: 2px;">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title text-center mb-3">Habitación Número: <?= $habitacion->num ?></h5>
-                                <p class="text-center fw-bold">Estado: <?= ucfirst($habitacion->estado) ?></p>
+                                <p class="text-center fw-bold">Estado: <?= $estadoTexto ?></p>
                                 <div class="infoRenta" id="infoRenta">
                                     <?php if ($habitacion->estado == "ocupada" && isset($habitacion->renta_id)): ?>
                                         <button class="btn btn-outline-primary btn-sm mb-3" type="button"
@@ -114,9 +212,33 @@
                                                     <p><strong>Teléfono:</strong> <?= $habitacion->num_telefono ?></p>
                                                     <p><strong>Noches:</strong> <?= $habitacion->num_noches ?></p>
                                                     <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?>
+                                                    <p><strong>Fin</strong> <?= formato_fecha($habitacion->fecha_fin, 10) ?></p>
                                                     </p>
                                                 <?php endif; ?>
                                                 <p><strong>Observaciones:</strong> <?= $habitacion->observaciones ?></p>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="infoReservacion" id="infoReservacion">
+                                    <?php if ($habitacion->estado == "reservada" || $habitacion->estado == "espera_h" && isset($habitacion->reservacion_id)): ?>
+                                        <button class="btn btn-outline-primary btn-sm mb-3" type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#reservacionInfo<?= $habitacion->habitacion_id ?>"
+                                            aria-expanded="false"
+                                            aria-controls="reservacionInfo<?= $habitacion->habitacion_id ?>">
+                                            Ver Detalles de la Reservación
+                                        </button>
+                                        <div class="collapse" id="reservacionInfo<?= $habitacion->habitacion_id ?>">
+                                            <div class="bg-light p-3 rounded border">
+                                                <p><strong>Huésped:</strong> <?= $habitacion->nombre_reservacion ?></p>
+                                                <p><strong>Teléfono:</strong> <?= $habitacion->telefono_reservacion ?></p>
+                                                <p><strong>Noches:</strong> <?= $habitacion->noches_reserva ?></p>
+                                                <p><strong>Inicio:</strong>
+                                                    <?= formato_fecha($habitacion->fecha_inicio_reserva, 3) ?>
+                                                <p><strong>Fin:</strong>
+                                                    <?= formato_fecha($habitacion->fecha_fin_reserva, 3) ?>
+                                                <p><strong>Observaciones:</strong> <?= $habitacion->observacion_reserva ?></p>
                                             </div>
                                         </div>
                                     <?php endif; ?>
@@ -154,8 +276,34 @@
                                         <?php if ($habitacion->estado == "ocupada"): ?>
                                             <li>
                                                 <a class="dropdown-item" style="cursor: pointer;"
-                                                    onclick="desocupar(this, '<?= $habitacion->habitacion_id ?>')">
+                                                    onclick="desocupar(this, '<?= $habitacion->habitacion_id ?>','rentas','<?= $habitacion->renta_id ?>')">
                                                     Liberar
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($habitacion->estado == "reservada"): ?>
+                                            <li>
+                                            <li>
+                                                <a class="dropdown-item" style="cursor: pointer;"
+                                                    onclick="rentarReservacion(this, '<?= $habitacion->habitacion_id ?>','<?= $habitacion->reservacion_id ?>')">
+                                                    Rentar
+                                                </a>
+                                            </li>
+                                            <a class="dropdown-item" style="cursor: pointer;"
+                                                onclick="cancelarReservacion(this, '<?= $habitacion->habitacion_id ?>','reservaciones','<?= $habitacion->reservacion_id ?>')">
+                                                Cancelar reservación
+                                            </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($habitacion->estado == "espera_h"): ?>
+                                            <li>
+                                                <a class="dropdown-item" style="cursor: pointer;"
+                                                    onclick="continuarReservacion(this, '<?= $habitacion->habitacion_id ?>','reservaciones','<?= $habitacion->reservacion_id ?>')">
+                                                    Continuar con la Reservación
+                                                </a>
+                                                <a class="dropdown-item" style="cursor: pointer;"
+                                                    onclick="cancelarReservacion(this, '<?= $habitacion->habitacion_id ?>','reservaciones','<?= $habitacion->reservacion_id ?>')">
+                                                    Cancelar reservación
                                                 </a>
                                             </li>
                                         <?php endif; ?>
@@ -179,10 +327,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label for="total" class="form-label">Total</label>
-                    <input type="text" class="form-control" id="total" readonly>
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Número de Habitación</label>
+                    <p id="numHabitacion" class="display-6 fw-bold text-primary">101</p>
                 </div>
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Precio Total</label>
+                    <p id="totalRenta" class="display-5 fw-bold text-success">$150.00</p>
+                </div>
+                <input type="text" id="precioHabitacionModal" hidden>
                 <div class="mb-3">
                     <label for="tipoRenta" class="form-label">Tipo de Renta</label>
                     <select class="form-select" id="tipoRenta" onchange="cambiarTipoRenta()">
@@ -190,24 +343,18 @@
                         <option value="noche">Por noche</option>
                     </select>
                 </div>
-                <input type="text" id="precioHabitacionModal" hidden>
-                <div class="mb-3">
-                    <label class="form-label">Número de Habitación</label>
-                    <p id="numHabitacion" class="form-control-plaintext fw-bold"></p>
-                </div>
                 <div id="informacionHuesped" class="d-none">
-                    <h6 class="fw-bold mt-3">Información del Huésped</h6>
-                    <div class="row g-2">
+                    <h6 class="fw-bold text-uppercase text-secondary border-bottom pb-2 mb-3">Información del Huésped
+                    </h6>
+                    <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="nombreHuesped" class="form-label">Nombre</label>
+                            <label for="nombreHuesped" class="form-label">Nombre del huésped</label>
                             <input type="text" class="form-control" id="nombreHuesped" placeholder="Juan Pérez">
                         </div>
                         <div class="col-md-6">
-                            <label for="telefonoHuesped" class="form-label">Teléfono</label>
+                            <label for="telefonoHuesped" class="form-label">Teléfono de contacto</label>
                             <input type="text" class="form-control" id="telefonoHuesped" placeholder="555-555-5555">
                         </div>
-                    </div>
-                    <div class="row g-2 mt-2">
                         <div class="col-md-6">
                             <label for="correoHuesped" class="form-label">Correo</label>
                             <input type="email" class="form-control" id="correoHuesped" placeholder="email@ejemplo.com">
@@ -228,9 +375,9 @@
                         <input type="datetime-local" class="form-control" id="fechaFin">
                     </div>
                 </div>
-                <div class="mt-3">
+                <div class="mt-4">
                     <label for="observaciones" class="form-label">Observaciones</label>
-                    <textarea class="form-control" id="observaciones" rows="2"
+                    <textarea class="form-control" id="observaciones" rows="3"
                         placeholder="Notas adicionales..."></textarea>
                 </div>
             </div>
@@ -243,41 +390,165 @@
     </div>
 </div>
 
-
-
 <div class="modal modal-xl fade" id="modalReservacion" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-    role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">Reservacion</h5>
+                <h5 class="modal-title" id="modalTitleId">Reservación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label for="numeroHabitacion" class="form-label">Número de habitación</label>
-                    <input type="number" class="form-control" id="numeroHabitacion" placeholder="Ejemplo: 21">
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Número de Habitación</label>
+                    <p id="numHabitacionR" class="display-6 fw-bold text-primary">101</p>
                 </div>
-                <div class="mb-3">
-                    <label for="numeroCamas" class="form-label">Número de Camas</label>
-                    <input type="number" class="form-control" id="numeroCamas" placeholder="Ejemplo: 2">
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Precio Total</label>
+                    <p id="totalReservacionR" class="display-5 fw-bold text-success">$150.00</p>
                 </div>
-                <div class="mb-3">
-                    <label for="precioNoche" class="form-label">Precio por Noche</label>
-                    <input type="text" class="form-control" id="precioNoche" placeholder="Ejemplo: 1500.00">
+                <input type="text" id="precioHabitacionR" hidden>
+                <div id="informacionHuesped">
+                    <h6 class="fw-bold text-uppercase text-secondary border-bottom pb-2 mb-3">Información del Huésped
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="nombreHuespedR" class="form-label">Nombre del huésped</label>
+                            <input type="text" class="form-control" id="nombreHuespedR" placeholder="Juan Pérez">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefonoHuespedR" class="form-label">Teléfono de contacto</label>
+                            <input type="text" class="form-control" id="telefonoHuespedR" placeholder="555-555-5555">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="correoHuespedR" class="form-label">Correo</label>
+                            <input type="email" class="form-control" id="correoHuespedR"
+                                placeholder="email@ejemplo.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="numNochesR" class="form-label">Noches</label>
+                            <input type="number" class="form-control" id="numNochesR" value="1" placeholder="2" min="1">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fechaInicioR" class="form-label">Fecha de Entrada</label>
+                            <input type="date" class="form-control" id="fechaInicioR">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fechaFinR" class="form-label">Fecha de Salida</label>
+                            <input type="date" class="form-control" id="fechaFinR">
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="observaciones" class="form-label">Observacion</label>
-                    <input type="text" class="form-control" id="observaciones"
-                        placeholder="Habitacion de solo reservacion">
+                <div class="mt-4">
+                    <label for="observacionesR" class="form-label">Observaciones</label>
+                    <textarea class="form-control" id="observacionesR" rows="3"
+                        placeholder="Habitación de solo reservación"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="guardarHabitacion()">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="guardarReservacion"
+                    onclick="guardarReservacion()">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="modalCancelarReservacion" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="modalCancelarTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalCancelarTitle">Cancelar Reservación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="fs-5">¿Está seguro de que desea cancelar la reservación?</p>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Número de Habitación:</label>
+                    <p id="numHabitacionC" class="fw-bold text-primary">101</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Motivo de Cancelación</label>
+                    <textarea class="form-control" id="motivoCancelacion" rows="3"
+                        placeholder="Ingrese el motivo"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" id="confirmarCancelacion">Cancelar Reservación</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-xl fade" id="modalRentaNoche" tabindex="-1" aria-labelledby="modalRentaNocheLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRentaNocheLabel">Rentar Habitación por Noche</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Número de Habitación</label>
+                    <p id="numHabitacionNoche" class="display-6 fw-bold text-primary">101</p>
+                </div>
+
+                <div class="mb-4 text-center">
+                    <label class="form-label text-uppercase fw-bold text-secondary">Precio Total</label>
+                    <p id="totalRentaNoche" class="display-5 fw-bold text-success">$0.00</p>
+                </div>
+
+                <input type="text" id="precioHabitacionNoche" hidden>
+
+                <h6 class="fw-bold text-uppercase text-secondary border-bottom pb-2 mb-3">Información del Huésped</h6>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="nombreHuespedNoche" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreHuespedNoche" placeholder="Juan Pérez">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="telefonoHuespedNoche" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefonoHuespedNoche" placeholder="555-555-5555">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="correoHuespedNoche" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="correoHuespedNoche"
+                            placeholder="email@ejemplo.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="numNochesNoche" class="form-label">Noches</label>
+                        <input type="number" class="form-control" id="numNochesNoche" placeholder="1" min="1" value="1">
+                    </div>
+                </div>
+
+                <div class="row g-2 mt-3">
+                    <div class="col-md-6">
+                        <label for="fechaInicioNoche" class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="fechaInicioNoche">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="fechaFinNoche" class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="fechaFinNoche">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label for="observacionesNoche" class="form-label">Observaciones</label>
+                    <textarea class="form-control" id="observacionesNoche" rows="3"
+                        placeholder="Notas adicionales..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="guardarRentaNoche">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <?= view('/template/template_footer') ?>
+
 <script src="<?= base_url() ?>/public/js/inicio.js"></script>

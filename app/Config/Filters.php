@@ -77,6 +77,7 @@ class Filters extends BaseConfig
                 "/Inicio",
                 "/habitaciones",
                 "/rentas",
+                "/home",
             ]
         ]
 

@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class Habitacion extends BaseController
 {
@@ -62,7 +61,9 @@ class Habitacion extends BaseController
     public function cambiarDisponibilidad()
     {
         $datosJson = $this->request->getJSON();
-        $this->model->cambiarDisponibilidad($datosJson->habitacion_id, $datosJson->estado);
+        $tipo = property_exists($datosJson, 'tipo') ? $datosJson->tipo : null;
+        $tipo_id = property_exists($datosJson, 'tipo_id') ? $datosJson->tipo_id : null;
+        $this->model->cambiarDisponibilidad($datosJson->habitacion_id, $datosJson->estado, $tipo, $tipo_id);
         return $this->response->setJSON(['status' => 'success']);
     }
 
