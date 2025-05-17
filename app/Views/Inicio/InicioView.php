@@ -212,7 +212,7 @@
                                                     <p><strong>Teléfono:</strong> <?= $habitacion->num_telefono ?></p>
                                                     <p><strong>Noches:</strong> <?= $habitacion->num_noches ?></p>
                                                     <p><strong>Inicio:</strong> <?= formato_fecha($habitacion->fecha_inicio, 10) ?>
-                                                    <p><strong>Fin</strong> <?= formato_fecha($habitacion->fecha_fin, 10) ?></p>
+                                                    <p><strong>Fin:</strong> <?= formato_fecha($habitacion->fecha_fin, 10) ?></p>
                                                     </p>
                                                 <?php endif; ?>
                                                 <p><strong>Observaciones:</strong> <?= $habitacion->observaciones ?></p>
@@ -229,6 +229,9 @@
                                             aria-controls="reservacionInfo<?= $habitacion->habitacion_id ?>">
                                             Ver Detalles de la Reservación
                                         </button>
+                                        <button class="btn btn-outline-primary btn-sm mb-3" type="button"
+                                            onclick="mostrarReservaciones(<?= $habitacion->habitacion_id ?>)"><i
+                                                class="fas fa-solid fa-calendar-days"></i></button>
                                         <div class="collapse" id="reservacionInfo<?= $habitacion->habitacion_id ?>">
                                             <div class="bg-light p-3 rounded border">
                                                 <p><strong>Huésped:</strong> <?= $habitacion->nombre_reservacion ?></p>
@@ -548,6 +551,24 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="modalReservaciones" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reservaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Calendario -->
+                <div id="calendarioReservaciones" style="margin-bottom: 30px;"></div>
+
+                <!-- Contenedor de información -->
+                <div id="infoReservacionModal" class="mt-4 border-top pt-3" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?= view('/template/template_footer') ?>
 

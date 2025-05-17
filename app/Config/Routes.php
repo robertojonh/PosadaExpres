@@ -42,3 +42,4 @@ $routes->post('reservaciones/getReservaciones', 'Reservaciones::getReservaciones
 $routes->post('/reservaciones/reservar', 'Reservaciones::guardarReservacion');
 $routes->post('/reservaciones/cancelacion', 'Reservaciones::cancelar');
 $routes->post('/reservaciones/getInfo', 'Reservaciones::getInfo');
+$routes->post('/reservaciones/getPorHabitacion', 'Reservaciones::getPorHabitacion');

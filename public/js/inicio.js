@@ -179,7 +179,11 @@ function desocupar(elemento, habitacion_id, tipo, tipo_id) {
     }),
     success: function (response) {
       if (response.status === "success") {
-        cambiarEstadoHabitacion(elemento, estado, habitacion_id);
+        if (response[0].existe) {
+          cambiarEstadoHabitacion(elemento, 'reservada', habitacion_id, response[0].data);
+        } else {
+          cambiarEstadoHabitacion(elemento, estado, habitacion_id);
+        }
         actualizarTablaEstados();
         $("#modalRentar").modal("hide");
         if (tipo == "rentas") {
@@ -206,7 +210,7 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
   const estadoText = card.querySelector("p");
   const dropdownMenu = $(elemento).closest(".dropdown").find(".dropdown-menu");
   const rentaInfoContainer = card.querySelector(".infoRenta");
-
+  const reservacionInfoContainer = card.querySelector(".infoReservacion");
   switch (estado) {
     case "libre":
       card.classList.add("border-success", "text-success");
@@ -222,8 +226,8 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
               Reservar
           </a>
         </li>`);
-      const rentaInfoContainer2 = card.querySelector(".infoReservacion");
-      rentaInfoContainer2.innerHTML = "";
+      rentaInfoContainer.innerHTML = "";
+      reservacionInfoContainer.innerHTML = "";
       break;
     case "no_disponible":
       card.classList.add("border-secondary", "text-secondary");
@@ -233,15 +237,14 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
     case "ocupada":
       card.classList.add("border-danger", "text-danger");
       estadoText.textContent = "Estado: Ocupada";
+      reservacionInfoContainer.innerHTML = "";
       dropdownMenu.html(`
           <li>
             <a class="dropdown-item text-secondary" style="cursor: pointer;"
                 onclick="desocupar(this, '${habitacion_id}','rentas','${data.renta_id}')">
                 Liberar
             </a>
-          </li>
-        `);
-      //Cambiar el formato de las fechas para mostrar la informacion correctamente
+          </li>`);
       const rentaInfo = `
           <button class="btn btn-outline-primary btn-sm mb-3" type="button" data-bs-toggle="collapse"
             data-bs-target="#rentaInfo${habitacion_id}" aria-expanded="false"
@@ -251,13 +254,13 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
           <div class="collapse" id="rentaInfo${habitacion_id}">
             <div class="bg-light p-3 rounded border">
               <p><strong>Tipo:</strong> <span class="text-primary">${data.tipoRenta === 1 ? "Por Horas" : "Por Noche"}</span></p>
-              ${data.tipoRenta === 1 ? `<p><strong>Fin:</strong> ${data.fechaInicio}</p>` : `
-                   <p><strong>Huésped:</strong> ${data.nombreHuesped}</p>
+              ${data.tipoRenta === 1 ? `<p><strong>Fin:</strong> ${data.fechaInicio}</p>` :
+          ` <p><strong>Huésped:</strong> ${data.nombreHuesped}</p>
                   <p><strong>Teléfono:</strong> ${data.telefonoHuesped}</p>
                   <p><strong>Noches:</strong> ${data.numNoches}</p>
-                  <p><strong>Fin:</strong> ${data.fechaInicio}</p>`}
-              <p><strong>Observaciones:</strong> ${data.observaciones || "Ninguna"
-        }</p>
+                  <p><strong>Inicio:</strong> ${formatoFechaJS(data.fechaInicio, 3)}</p >
+                  <p><strong>Fin:</strong> ${formatoFechaJS(calcularFechaFin(data.fechaInicio, data.numNoches), 3)}</p>`}
+              <p><strong>Observaciones:</strong> ${data.observaciones || "Ninguna"}</p>
             </div>
           </div>`;
       rentaInfoContainer.innerHTML = rentaInfo;
@@ -266,8 +269,8 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
       if (data.fechaInicio === hoy) {
         card.classList.add("border-primary", "text-primary");
         estadoText.textContent = "Estado: Esperando huesped";
-        dropdownMenu.html(`
-      <li>
+        rentaInfoContainer.innerHTML = "";
+        dropdownMenu.html(`<li>
         <a class="dropdown-item text-secondary" style="cursor: pointer;"
             onclick="continuarReservacion(this, '${habitacion_id}','${habitacion_id}','${data.reservacion_id}')">
             Continuar con la reservación
@@ -276,13 +279,11 @@ function cambiarEstadoHabitacion(elemento, estado, habitacion_id, data) {
             onclick="cancelarReservacion(this, '${habitacion_id}','reservaciones','${data.reservacion_id}')">
             Cancelar
         </a>
-      </li>
-    `);
+      </li>`);
       } else {
         card.classList.add("border-warning", "text-warning");
         estadoText.textContent = "Estado: Reservada";
-        dropdownMenu.html(`
-      <li>
+        dropdownMenu.html(`<li>
         <a class="dropdown-item text-secondary" style="cursor: pointer;"
             onclick="rentarReservacion(this, '${habitacion_id}','${habitacion_id}','${data.reservacion_id}')">
             Rentar con reservación
@@ -421,7 +422,6 @@ function cancelarReservacion(elemento, habitacion_id, tipo, tipo_id) {
     .data("tipo", tipo)
     .data("tipo_id", tipo_id)
     .data("elemento", elemento);
-
   $("#modalCancelarReservacion").modal("show");
 }
 
@@ -431,12 +431,10 @@ $(document).on("click", "#confirmarCancelacion", function () {
   let tipo_id = $(this).data("tipo_id");
   let elemento = $(this).data("elemento");
   let motivo = $("#motivoCancelacion").val().trim();
-
   if (motivo === "") {
     generalNotify('personalizada', 'warning', 'Campos necesarios', 'Es necesario completar todos los campos');
     return;
   }
-
   $.ajax({
     url: base_url + "reservaciones/cancelacion",
     type: "POST",
@@ -550,7 +548,6 @@ function guardarRentaReservacion(habitacion_id, elemento, reservacion_id) {
   });
 }
 
-/* onclick = "continuarReservacion(this, '<?= $habitacion->habitacion_id ?>','reservaciones','<?= $habitacion->reservacion_id ?>')" > */
 function continuarReservacion(elemento, habitacion_id, tipo, reservacion_id) {
 
   $.ajax({
@@ -656,4 +653,72 @@ function guardarRentaNoche(elemento, habitacion_id, reservacion_id) {
     },
     error: function (error) { },
   });
+}
+
+function mostrarReservaciones(habitacion_id) {
+  $.ajax({
+    url: base_url + 'reservaciones/getPorHabitacion',
+    type: 'POST',
+    dataType: 'json',
+    data: { habitacion_id },
+    success: function (response) {
+      if (!response || !Array.isArray(response)) {
+        console.error("Respuesta no válida");
+        return;
+      }
+
+      const eventos = response.map(res => ({
+        id: res.id,
+        title: res.nombre + " - " + res.numero_habitacion,
+        start: res.fecha_inicio,
+        end: res.fecha_termino,
+        extendedProps: res // toda la info adicional
+      }));
+
+      const calendario = new FullCalendar.Calendar(document.getElementById('calendarioReservaciones'), {
+        initialView: 'dayGridMonth',
+        height: 500,
+        locale: 'es',
+        selectable: true,
+        events: eventos,
+        eventClick: function (info) {
+          mostrarInfoReservacion(info.event.extendedProps);
+        },
+        select: function (selectionInfo) {
+          const evento = eventos.find(e => {
+            return new Date(e.start) <= selectionInfo.start && new Date(e.end) >= selectionInfo.end;
+          });
+
+          if (evento) {
+            mostrarInfoReservacion(evento.extendedProps);
+          } else {
+            $("#infoReservacion").html(`<div class="alert alert-warning">No hay reservación en ese rango.</div>`);
+          }
+        }
+      });
+
+      calendario.render();
+      $('#modalReservaciones').modal('show');
+    },
+    error: function () {
+      alert("Error al obtener las reservaciones.");
+    }
+  });
+}
+
+function mostrarInfoReservacion(data) {
+  const infoHtml = `
+    <h5 class="mb-3">Información de la reservación</h5>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <p><strong>Nombre:</strong> ${data.nombre}</p>
+        <p><strong>Habitación:</strong> ${data.numero_habitacion}</p>
+        <p><strong>Fecha Inicio:</strong> ${data.fecha_inicio}</p>
+        <p><strong>Fecha Fin:</strong> ${data.fecha_termino}</p>
+        <p><strong>Detalles:</strong> ${data.detalles ?? "Sin detalles"}</p>
+      </div>
+    </div>
+  `;
+
+  $("#infoReservacionModal").html(infoHtml).show();
 }

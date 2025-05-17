@@ -63,4 +63,10 @@ class Reservaciones extends BaseController
         $datosJson = $this->request->getJSON();
         return $this->response->setJSON(['status' => 'success', 'info' => $this->model->getInfo($datosJson->reservacion_id)]);
     }
+
+    public function getPorHabitacion()
+    {
+        return $this->response->setJSON($this->model->getPorHabitacion($this->request->getPost('habitacion_id')));
+    }
+
 }

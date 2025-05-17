@@ -164,4 +164,27 @@ class HabitacionModel extends Model
             ->delete();
     }
 
+    public function revisarReservacion($habitacion_id)
+    {
+        $reservacion = $this->db->query("SELECT 
+            r.reservacion_id,
+            r.habitacion_id,
+            h.num AS numHabitacion,
+            r.nombre_huesped AS nombreHuesped,
+            r.correo_e AS correoHuesped,
+            r.num_telefono AS telefonoHuesped,
+            r.num_noches AS numNoches,
+            r.fecha_inicio AS fechaInicio,
+            r.fecha_fin AS fechaFin,
+            r.observaciones,
+            r.precio AS total
+        FROM reservaciones AS r
+        INNER JOIN habitaciones AS h ON r.habitacion_id = h.habitacion_id
+        WHERE r.habitacion_id = ? AND r.estatus_reservacion = 'activa'", [$habitacion_id])->getRowArray();
+        return [
+            'data' => $reservacion ?? [],
+            'existe' => !empty($reservacion)
+        ];
+    }
+
 }

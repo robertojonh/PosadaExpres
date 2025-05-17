@@ -76,4 +76,21 @@ class ReservacionesModel extends Model
          r.precio as precio_reservacion, h.precio as precio_habitacion, h.num as habitacion_numero FROM reservaciones AS r
         INNER JOIN habitaciones AS h ON h.habitacion_id = r.habitacion_id WHERE r.reservacion_id = ?", [$reservacion_id])->getResult();
     }
+
+    function getPorHabitacion($habitacion_id)
+    {
+        $sql = "SELECT 
+                r.habitacion_id as id, 
+                r.nombre_huesped as nombre, 
+                h.num as numero_habitacion, 
+                r.fecha_inicio, 
+                r.fecha_fin as fecha_termino, 
+                r.observaciones as detalles
+            FROM reservaciones AS r
+            INNER JOIN habitaciones AS h ON h.habitacion_id = r.habitacion_id
+            WHERE r.habitacion_id = ? AND r.estatus_reservacion = 'activa'";
+
+        return $this->db->query($sql, [$habitacion_id])->getResult();
+    }
+
 }

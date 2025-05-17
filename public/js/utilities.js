@@ -51,3 +51,10 @@ function formatoFechaJS(fecha, option) {
 
     return resultado;
 }
+
+function calcularFechaFin(fechaInicio, noches) {
+    const fecha = new Date(fechaInicio);
+    fecha.setDate(fecha.getDate() + noches);
+    fecha.setHours(12, 0, 0, 0);
+    return fecha.toISOString();
+}

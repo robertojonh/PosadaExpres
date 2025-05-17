@@ -3,6 +3,7 @@ var tableRentas = new Tabulator("#rentas_tabulator", {
   ajaxConfig: "POST",
   tooltips: true,
   layout: "fitColumns",
+  height: "900px",
   responsiveLayout: "collapse",
   columns: [
     {

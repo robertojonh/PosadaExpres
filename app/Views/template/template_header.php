@@ -12,6 +12,13 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
     <script src="<?= base_url() ?>/public/js/notificacion.js"></script>
     <script src="<?= base_url() ?>/public/js/utilities.js"></script>
+    <!-- FullCalendar CSS -->
+    <link href="https://unpkg.com/@fullcalendar/core@6.1.8/index.global.min.css" rel="stylesheet">
+    <!-- FullCalendar JS -->
+    <script src="https://unpkg.com/@fullcalendar/core@6.1.8/index.global.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/daygrid@6.1.8/index.global.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/interaction@6.1.8/index.global.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/core@6.1.8/locales/es.global.min.js"></script>
 </head>
 
 <body>

@@ -3,6 +3,9 @@
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="<?= base_url() ?>/public/tabulator/js/tabulator.min.js"></script>
 <script src="<?= base_url() ?>/public/font-awesome/js/all.min.js"></script>
+
+
+
 <script>
     const pusher = new Pusher("a88403b3e52c3753b043", {
         cluster: "us2",
