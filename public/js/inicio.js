@@ -664,17 +664,24 @@ function mostrarReservaciones(habitacion_id) {
     success: function (response) {
       if (!response || !Array.isArray(response)) {
         console.error("Respuesta no válida");
+        $("#calendarioReservaciones").html('<div class="alert alert-danger">Error al cargar las reservaciones.</div>');
         return;
       }
-
+      if (response.length === 0) {
+        $("#calendarioReservaciones").html('<div class="alert alert-info">No hay reservaciones registradas para esta habitación.</div>');
+        $("#infoReservacionModal").hide();
+        $('#modalReservaciones').modal('show');
+        return;
+      }
+      $("#calendarioReservaciones").empty();
+      $("#infoReservacionModal").hide().empty();
       const eventos = response.map(res => ({
         id: res.id,
-        title: res.nombre + " - " + res.numero_habitacion,
+        title: `Huesped: ${res.nombre} - Habitacion: ${res.numero_habitacion}`,
         start: res.fecha_inicio,
         end: res.fecha_termino,
-        extendedProps: res // toda la info adicional
+        extendedProps: res
       }));
-
       const calendario = new FullCalendar.Calendar(document.getElementById('calendarioReservaciones'), {
         initialView: 'dayGridMonth',
         height: 500,
@@ -686,22 +693,28 @@ function mostrarReservaciones(habitacion_id) {
         },
         select: function (selectionInfo) {
           const evento = eventos.find(e => {
-            return new Date(e.start) <= selectionInfo.start && new Date(e.end) >= selectionInfo.end;
+            const inicio = new Date(e.start);
+            const fin = new Date(e.end);
+            const diaSeleccionado = selectionInfo.start;
+            return inicio <= diaSeleccionado && fin >= diaSeleccionado;
           });
-
           if (evento) {
             mostrarInfoReservacion(evento.extendedProps);
           } else {
-            $("#infoReservacion").html(`<div class="alert alert-warning">No hay reservación en ese rango.</div>`);
+            $("#infoReservacionModal")
+              .html(`<div class="alert alert-warning">No hay reservación en el día seleccionado.</div>`)
+              .show();
           }
         }
       });
-
       calendario.render();
+      $('#modalReservaciones').on('shown.bs.modal', function () {
+        calendario.updateSize();
+      });
       $('#modalReservaciones').modal('show');
     },
     error: function () {
-      alert("Error al obtener las reservaciones.");
+      $("#calendarioReservaciones").html('<div class="alert alert-danger">Error al obtener las reservaciones.</div>');
     }
   });
 }
@@ -713,8 +726,8 @@ function mostrarInfoReservacion(data) {
       <div class="card-body">
         <p><strong>Nombre:</strong> ${data.nombre}</p>
         <p><strong>Habitación:</strong> ${data.numero_habitacion}</p>
-        <p><strong>Fecha Inicio:</strong> ${data.fecha_inicio}</p>
-        <p><strong>Fecha Fin:</strong> ${data.fecha_termino}</p>
+        <p><strong>Fecha Inicio:</strong> ${formatoFechaJS(data.fecha_inicio, 3)}</p>
+        <p><strong>Fecha Fin:</strong> ${formatoFechaJS(data.fecha_termino, 3)}</p>
         <p><strong>Detalles:</strong> ${data.detalles ?? "Sin detalles"}</p>
       </div>
     </div>

@@ -57,6 +57,13 @@
                             <a class="nav-link <?= (url_is('reservaciones') !== false ? 'active' : '') ?>"
                                 href="<?= base_url() ?>reservaciones">Informe de Reservaciones</a>
                         </li>
+                        <?php if (tipo() == 'admin'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link <?= (url_is('usuarios/show') !== false ? 'active' : '') ?>"
+                                    href="<?= base_url() ?>usuarios/show">Usuarios</a>
+                            </li>
+                        <?php else: ?>
+                        <?php endif; ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">

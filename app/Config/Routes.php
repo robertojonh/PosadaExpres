@@ -9,37 +9,54 @@ use CodeIgniter\Router\RouteCollection;
 
 /* Home */
 
-
 /* Inicio de sesion */
 $routes->get('/Login', 'Login::index');
 $routes->post('/acceder', 'Login::Login');
 $routes->get('/Salir', 'Login::Salir');
 
 /* Home */
-$routes->get('/Inicio', 'Inicio::index');
-$routes->get('/', 'Inicio::index');
-$routes->get('/home', 'Inicio::index');
+$routes->get('/Inicio', 'Inicio::index', ['filter' => 'authGuard:admin,editor,consulta']);
+$routes->get('/', 'Inicio::index', ['filter' => 'authGuard:admin,editor,consulta']);
+$routes->get('/home', 'Inicio::index', ['filter' => 'authGuard:admin,editor,consulta']);
 
 /* Habitaciones */
-$routes->get('/habitaciones', 'Habitacion::index');
-$routes->post('/habitaciones/guardarHabitacion', 'Habitacion::guardarHabitacion');
-$routes->post('/habitaciones/modificarHabitacion', 'Habitacion::modificarHabitacion');
-$routes->post('/habitaciones/cambiarDisponibilidad', 'Habitacion::cambiarDisponibilidad');
-$routes->post('/habitaciones/cambiarObservacion', 'Habitacion::cambiarObservacion');
-$routes->post('/habitaciones/borrarHabitacion', 'Habitacion::borrarHabitacion');
-$routes->post('/habitaciones/getInfo', 'Habitacion::getHabitacion');
+$routes->group('habitaciones', ['filter' => 'authGuard:admin,editor,consulta'], function ($routes) {
+    $routes->get('', 'Habitacion::index');
+    $routes->post('guardarHabitacion', 'Habitacion::guardarHabitacion');
+    $routes->post('modificarHabitacion', 'Habitacion::modificarHabitacion');
+    $routes->post('cambiarDisponibilidad', 'Habitacion::cambiarDisponibilidad');
+    $routes->post('cambiarObservacion', 'Habitacion::cambiarObservacion');
+    $routes->post('borrarHabitacion', 'Habitacion::borrarHabitacion');
+    $routes->post('getInfo', 'Habitacion::getHabitacion');
+});
 
 /* Rentas */
-$routes->get('rentas', 'Rentas::index');
-$routes->post('rentas/rentarHabitacion', 'Rentas::rentarHabitacion');
-$routes->post('rentas/getRentas', 'Rentas::getRentas');
-$routes->post('rentas/continuarReservacion', 'Rentas::continuarReservacion');
-
+$routes->group('rentas', ['filter' => 'authGuard:admin,editor,consulta,revision'], function ($routes) {
+    $routes->get('', 'Rentas::index');
+    $routes->post('rentarHabitacion', 'Rentas::rentarHabitacion');
+    $routes->post('getRentas', 'Rentas::getRentas');
+    $routes->post('continuarReservacion', 'Rentas::continuarReservacion');
+});
 
 /* Reservaciones */
-$routes->get('/reservaciones', 'Reservaciones::index');
-$routes->post('reservaciones/getReservaciones', 'Reservaciones::getReservaciones');
-$routes->post('/reservaciones/reservar', 'Reservaciones::guardarReservacion');
-$routes->post('/reservaciones/cancelacion', 'Reservaciones::cancelar');
-$routes->post('/reservaciones/getInfo', 'Reservaciones::getInfo');
-$routes->post('/reservaciones/getPorHabitacion', 'Reservaciones::getPorHabitacion');
+$routes->group('reservaciones', ['filter' => 'authGuard:admin,editor,consulta'], function ($routes) {
+    $routes->get('', 'Reservaciones::index');
+    $routes->post('getReservaciones', 'Reservaciones::getReservaciones');
+    $routes->post('reservar', 'Reservaciones::guardarReservacion');
+    $routes->post('cancelacion', 'Reservaciones::cancelar');
+    $routes->post('getInfo', 'Reservaciones::getInfo');
+    $routes->post('getPorHabitacion', 'Reservaciones::getPorHabitacion');
+});
+
+/* REPORTES EXCEL Y PDF */
+$routes->group('reportes', ['filter' => 'authGuard:admin,editor,consulta'], function ($routes) {
+    $routes->get('reservaciones', 'Reportes::excelReservaciones');
+    $routes->get('rentas', 'Reportes::excelRentas');
+});
+
+/* USUARIOS */
+
+$routes->group('usuarios', ['filter' => 'authGuard:admin'], function ($routes) {
+    $routes->get('show', 'Usuarios::show');
+    $routes->post('getUsuarios', 'Usuarios::getUsuarios');
+});

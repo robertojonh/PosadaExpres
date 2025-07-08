@@ -66,6 +66,7 @@ class Login extends BaseController
                             "user_id" => $datosUsuarios->user_id,
                             "username" => $datosUsuarios->user,
                             "type" => $datosUsuarios->type,
+                            "tipo" => $datosUsuarios->tipo,
                             "email" => $datosUsuarios->email,
                         ];
                         $session = session();

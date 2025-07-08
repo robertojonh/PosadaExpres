@@ -5,8 +5,8 @@
         <div class="card-body">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="mb-0">Lista de las Rentas</h3>
-                <a href="<?= base_url('rentas/exportar') ?>" type="button" class="btn btn-success">
-                    <i class="bi bi-file-earmark-excel"></i> Exportar Datos
+                <a href="<?= base_url('reportes/rentas') ?>" type="button" class="btn btn-success">
+                    <i class="fas fa-file-excel"></i> Exportar Datos
                 </a>
             </div>
             <div id="rentas_tabulator"></div>
